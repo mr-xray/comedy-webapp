@@ -1,0 +1,16 @@
+#main-box {
+  height: 10%;
+  width: 100%;
+  background-color: var(--color-gray);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  > * {
+    margin: 0 2rem;
+  }
+}
+
+#title {
+  color: var(--color-white);
+  font-size: 2rem;
+}
