@@ -15,4 +15,8 @@ export class Queue<T> {
   public top(): T | undefined {
     return this._store[0];
   }
+
+  public get storage(): T[] {
+    return this._store;
+  }
 }
