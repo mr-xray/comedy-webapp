@@ -30,7 +30,7 @@ export interface MultipleChoiceQuestionEventPayload extends EventPayload {
   answers: Answer[];
 }
 
-export interface AugumentedRealityEventPayload extends EventPayload {
+export interface AugmentedRealityEventPayload extends EventPayload {
   url: string;
   width: number;
   height: number;

@@ -1,13 +1,17 @@
+import { trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import {
-  AppEvent,
-  EventTypes,
-  TriggerTypes,
-} from 'src/app/data_access/websocket/util/types';
+  EventIdentifier,
+  MultipleChoiceQuestionEventPayload,
+} from 'src/app/data_access/websocket/util/events';
+import {
+  ManualTriggerPayload,
+  TriggerType,
+} from 'src/app/data_access/websocket/util/triggers';
+import { AppEvent } from 'src/app/data_access/websocket/util/types';
 import { EventQueueService } from '../../service/event-queue.service';
-import { ExtraEventService } from '../../service/extra-event.service';
-import { GpsMarkerTypes, GpsPayload, GpsTrigger } from '../../util/gps-trigger';
+import { CompassDirection, GpsTriggerPayload } from '../../util/gps-trigger';
 
 declare var ol: any;
 @Component({
@@ -16,69 +20,110 @@ declare var ol: any;
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit {
-  private gpsPoints: Map<number, any> = new Map<number, any>();
-  private eventTrigger: Map<number, GpsTrigger[]> = new Map<
-    number,
-    GpsTrigger[]
-  >();
+  //--------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------
+  private event: AppEvent = {
+    id: 1, // Damit man die verschiedenen Objekte besser filtern, mappen, etc. kann
+    triggers: [
+      // Durch welche Trigger kann das Event getriggert werden?
+      {
+        id: 1,
+        type: TriggerType.GPS,
+        priority: 64,
+        payload: new GpsTriggerPayload(
+          false,
+          1,
+          'https://upload.wikimedia.org/wikipedia/commons/6/69/How_to_use_icon.svg',
+          5,
+          CompassDirection.EAST,
+          'trigger description asdf',
+          {
+            latitude: 46.801052,
+            longitude: 15.539782,
+          }
+        ),
+      },
+      {
+        id: 3,
+        type: TriggerType.GPS,
+        priority: 64,
+        payload: new GpsTriggerPayload(
+          false,
+          0,
+          'https://upload.wikimedia.org/wikipedia/commons/6/69/How_to_use_icon.svg',
+          5,
+          CompassDirection.EAST,
+          'trigger description asdf',
+          {
+            latitude: 46.800993,
+            longitude: 15.541868,
+          }
+        ),
+      },
+      {
+        id: 2,
+        type: TriggerType.MANUAL,
+        priority: 128,
+        payload: new ManualTriggerPayload(10000),
+      },
+    ],
+    finish: false,
+    name: 'Event 1 gps',
+    description: 'Event descirption',
+    type: EventIdentifier.MULTIPLE_CHOICE,
+    payload: {
+      question: 'Question 1??',
+      answers: [
+        {
+          answer: 'answer111',
+          correct: true,
+        },
+        {
+          answer: 'answer222',
+          correct: false,
+        },
+        {
+          answer: 'answer333',
+          correct: false,
+        },
+        {
+          answer: 'answer444',
+          correct: true,
+        },
+      ],
+    },
+  };
+  //------------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------
   constructor(
-    private extraEvents: ExtraEventService,
     private eventQueue: EventQueueService,
     private geolocation$: GeolocationService
   ) {
-    const event: AppEvent = {
-      eventId: 1, // Damit man die verschiedenen Objekte besser filtern, mappen, etc. kann
-      triggers: [
-        // Durch welche Trigger kann das Event getriggert werden?
-        new GpsTrigger(
-          {
-            lat: 1,
-            lon: 1,
-            radiusInMeter: 5,
-          },
-          GpsMarkerTypes.UNKNOWN // Der Trigger soll auf der Karte durch ein "?"-Symbol dargestellt werden
-        ),
-      ],
-      ignoreOrder: true, // Das Event muss nicht in Reihenfolge getriggert werden
-      deliverable: true, // Das Event ist noch zustellbar (wurde noch nicht getriggert / vom Admin gesperrt )
-      event: {
-        name: 'event Station xy',
-        description: 'dummy description',
-        type: EventTypes.Image,
-        payload: {
-          size: {
-            width: 100,
-            height: 100,
-          },
-          url: 'path/to/image.png',
-        },
-      },
-    };
-    event.deliverable = true;
-    extraEvents.submitPoint(event);
-    extraEvents.subscribe((x) => {
-      x;
-    });
-    extraEvents.getEvents.forEach((event) =>
-      //this.gpsPoints.set(event.eventId, this.createMarkerForGps(event.triggers.))
-      event.triggers.forEach((trigger) => {
-        if (trigger.type === TriggerTypes.Gps) {
-          this.gpsPoints.set(trigger);
+    this.eventQueue = eventQueue;
+    this.eventQueue.submitEvent(this.event);
+    this.eventQueue.observable.subscribe((ev) => {
+      console.log('Trigger ');
+      ev.triggers.forEach((t) => {
+        if (t.type === TriggerType.GPS) {
         }
-      })
-    );
-    this.gpsPoints = this.gpsPoints.concat(extraEvents.getEvents);
-    this.gpsPoints = this.gpsPoints.concat(eventQueue.getSequence);
+      });
+    });
+    console.log(this.eventQueue);
+    //this.gpsPoints = this.gpsPoints.concat(extraEvents.getEvents);
+    //this.gpsPoints = this.gpsPoints.concat(eventQueue.getSequence);
     this.geolocation$.subscribe((position) => {
-      this.centerView(position);
+      //this.centerView(position);
     });
   }
 
   private map: any;
   private mapView: any;
   private markerUnknownLayer: any;
+  //private markerUnknownLayer: any;
   private markerCheckLayer: any;
-  private markerGoalLayer: any;
+  private markerLayer: any;
 
   reloadMap() {
     this.map = null;
@@ -89,15 +134,25 @@ export class MapComponent implements OnInit {
 
   ngOnInit() {
     this.createMap();
+    for (let t of this.event.triggers) {
+      if (t.type === TriggerType.GPS) {
+        /*console.log(
+          t,
+          (t.payload as GpsTriggerPayload).coordinates.longitude,
+          (t.payload as GpsTriggerPayload).coordinates.latitude,
+          this.markerUnknownLayer
+        );*/
+        this.createMarkerForGps(
+          (t.payload as GpsTriggerPayload).coordinates.longitude,
+          (t.payload as GpsTriggerPayload).coordinates.latitude,
+          this.markerUnknownLayer
+        );
+      }
+    }
+    this.updateLocation();
   }
 
   createMap() {
-    // set test marker
-    const iconFeature = new ol.Feature({
-      geometry: new ol.geom.Point(ol.proj.fromLonLat([15.541138, 46.801486])),
-      name: 'Somewhere near Nottingham',
-    });
-
     // create Map
     this.map = new ol.Map({
       target: 'map',
@@ -122,7 +177,7 @@ export class MapComponent implements OnInit {
           anchor: [0.5, 46],
           anchorXUnits: 'fraction',
           anchorYUnits: 'pixels',
-          src: 'assets/images/marker_unknown.svg',
+          src: 'https://upload.wikimedia.org/wikipedia/commons/6/69/How_to_use_icon.svg',
         }),
       }),
     });
@@ -130,10 +185,13 @@ export class MapComponent implements OnInit {
     this.mapView.setZoom(18);
   }
 
-  centerView(location: GeolocationPosition) {
-    console.log(
-      `center map to: ${location.coords.longitude} ${location.coords.latitude}`
+  updateLocation() {
+    this.geolocation$.subscribe((locationData) =>
+      this.centerView(locationData)
     );
+  }
+
+  centerView(location: GeolocationPosition) {
     this.mapView.setCenter(
       ol.proj.fromLonLat([location.coords.longitude, location.coords.latitude])
     );

@@ -7,11 +7,10 @@ export interface EventDto {
   name: string;
   description: string;
   payload: EventPayload;
+  type: EventIdentifier;
 }
 export interface AppEvent extends EventDto {
   finish: boolean;
 }
 
-export interface EventPayload {
-  type: EventIdentifier;
-}
+export interface EventPayload {}

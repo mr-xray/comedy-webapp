@@ -11,8 +11,7 @@ export class GpsTriggerPayload implements TriggerPayload {
     radius: number,
     direction: CompassDirection,
     description: string,
-    coordinates: any,
-    priority: number
+    coordinates: any
   ) {
     this.obscure = obscure;
     this.sequence = sequence;
@@ -21,11 +20,7 @@ export class GpsTriggerPayload implements TriggerPayload {
     this.direction = direction;
     this.description = description;
     this.coordinates = coordinates;
-    this.type = TriggerType.GPS;
-    this.priority = priority;
   }
-  type: TriggerType;
-  priority: number;
 
   obscure: boolean;
   sequence: number;

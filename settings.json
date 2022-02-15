@@ -1,0 +1,130 @@
+{
+  "users": [
+    {
+      "username": "root",
+      "password": "root",
+      "roles": [
+        "admin"
+      ]
+    },
+    {
+      "username": "admin_user",
+      "password": "Cisco123",
+      "roles": [
+        "admin"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": 1,
+      "name": "Station Hornbahn II",
+      "description": "Die Station Hornbahn 2 ist einer von 5 Stops auf dem Lift auf der Bichl Alm",
+      "triggers": [
+        {
+          "id": 1,
+          "payload": {
+            "priority": 64,
+            "type": "GPS",
+            "obscure": false,
+            "sequence": 1,
+            "markerIcon": "jakob-galaxy.at/markers/questionmarkIcon.svg",
+            "coordinates": {
+              "latitude": 46.801571,
+              "longitude": 15.540631
+            },
+            "radius": 15.5,
+            "direction": "NORTH",
+            "description": "An diesem Punkt befindet sich die Station Hornbahn II"
+          }
+        },
+        {
+          "id": 2,
+          "payload": {
+            "type": "GPS",
+            "priority": 64,
+            "obscure": true,
+            "sequence": 1,
+            "markerIcon": "not.applicable/because/trigger/is.obscure",
+            "coordinates": {
+              "latitude": 45.801571,
+              "longitude": 15.540631
+            },
+            "radius": 25.5,
+            "direction": "SOUTH",
+            "description": "An diesem Punkt befindet sich nicht die Station Hornbahn II ok"
+          }
+        },
+        {
+          "id": 3,
+          "payload": {
+            "type": "MANUAL",
+            "priority": 128,
+            "minDuration": 5000
+          }
+        }
+      ],
+      "payload": {
+        "type": "VIDEO",
+        "url": "https://www.youtube.com/embed/-jhBDFaRFVc",
+        "width": 960,
+        "height": 540,
+        "length": 521000
+      }
+    },
+    {
+      "id": 2,
+      "name": "Station Hornbahn III",
+      "description": "Die Station Hornbahn 3 ist einer von 5 Stops und die Mittelstation auf dem Lift auf der Bichl Alm",
+      "triggers": [
+        {
+          "id": 4,
+          "payload": {
+            "type": "GPS",
+            "priority": 64,
+            "obscure": false,
+            "sequence": 1,
+            "markerIcon": "jakob-galaxy.at/markers/chechmarkIcon.svg",
+            "coordinates": {
+              "latitude": 46.801571,
+              "longitude": 15.540631
+            },
+            "radius": 20.5,
+            "direction": "NORTH",
+            "description": "An diesem Punkt befindet sich die Station Hornbahn III"
+          }
+        },
+        {
+          "id": 5,
+          "payload": {
+            "type": "MANUAL",
+            "priority": 128,
+            "minDuration": 10000
+          }
+        }
+      ],
+      "payload": {
+        "type": "MULTIPLE_CHOICE",
+        "question": "Welche Abfahrten befinden sich im Kitzbühler Schigebiet?",
+        "answers": [
+          {
+            "answer": "Achenrainbahn",
+            "correct": false
+          },
+          {
+            "answer": "Fleck",
+            "correct": true
+          },
+          {
+            "answer": "Hahnenkamm",
+            "correct": true
+          },
+          {
+            "answer": "Edelweißbahn",
+            "correct": false
+          }
+        ]
+      }
+    }
+  ]
+}
