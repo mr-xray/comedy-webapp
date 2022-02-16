@@ -6,6 +6,7 @@ import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { JwtHttpInterceptor } from './data_access/authentication/interceptor/jwt-http.interceptor';
+import { ConfigService } from './data_access/backend-endpoint/service/config.service';
 import { GpsModule } from './feature/gps/gps.module';
 import { TitleBarModule } from './ui/title-bar/title-bar.module';
 

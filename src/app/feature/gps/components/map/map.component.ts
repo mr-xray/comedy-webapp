@@ -20,77 +20,7 @@ export class MapComponent implements OnInit {
   //--------------------------------------------------------------------------------------------------
   //--------------------------------------------------------------------------------------------------
   //--------------------------------------------------------------------------------------------------
-  private event: AppEvent = {
-    id: 1, // Damit man die verschiedenen Objekte besser filtern, mappen, etc. kann
-    triggers: [
-      // Durch welche Trigger kann das Event getriggert werden?
-      {
-        id: 1,
-        type: TriggerType.GPS,
-        priority: 64,
-        payload: new GpsTriggerPayload(
-          false,
-          1,
-          'https://upload.wikimedia.org/wikipedia/commons/6/69/How_to_use_icon.svg',
-          5,
-          CompassDirection.EAST,
-          'trigger description asdf',
-          {
-            latitude: 46.801052,
-            longitude: 15.539782,
-          }
-        ),
-      },
-      {
-        id: 3,
-        type: TriggerType.GPS,
-        priority: 64,
-        payload: new GpsTriggerPayload(
-          false,
-          0,
-          'https://upload.wikimedia.org/wikipedia/commons/6/69/How_to_use_icon.svg',
-          5,
-          CompassDirection.EAST,
-          'trigger description asdf',
-          {
-            latitude: 46.800993,
-            longitude: 15.541868,
-          }
-        ),
-      },
-      {
-        id: 2,
-        type: TriggerType.MANUAL,
-        priority: 128,
-        payload: new ManualTriggerPayload(10000),
-      },
-    ],
-    finish: false,
-    name: 'Event 1 gps',
-    description: 'Event descirption',
-    type: EventIdentifier.MULTIPLE_CHOICE,
-    payload: {
-      question: 'Question 1??',
-      answers: [
-        {
-          answer: 'answer111',
-          correct: true,
-        },
-        {
-          answer: 'answer222',
-          correct: false,
-        },
-        {
-          answer: 'answer333',
-          correct: false,
-        },
-        {
-          answer: 'answer444',
-          correct: true,
-        },
-      ],
-    },
-  };
+
   //------------------------------------------------------------------------------------
   //------------------------------------------------------------------------------------
   //------------------------------------------------------------------------------------
@@ -99,7 +29,7 @@ export class MapComponent implements OnInit {
     private geolocation$: GeolocationService
   ) {
     this.eventQueue = eventQueue;
-    this.eventQueue.submitEvent(this.event);
+    //this.eventQueue.submitEvent(this.event);
     this.eventQueue.subscribe((ev) => {
       console.log('Trigger ');
       ev.triggers.forEach((t) => {
@@ -131,7 +61,8 @@ export class MapComponent implements OnInit {
 
   ngOnInit() {
     this.createMap();
-    for (let t of this.event.triggers) {
+    let asdf: EventTriggerDto[] = [];
+    for (let t of asdf) {
       if (t.type === TriggerType.GPS) {
         /*console.log(
           t,

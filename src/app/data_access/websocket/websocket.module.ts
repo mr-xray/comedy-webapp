@@ -5,6 +5,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule, BrowserModule, HttpClientModule],
+  imports: [CommonModule],
 })
 export class WebsocketModule {}

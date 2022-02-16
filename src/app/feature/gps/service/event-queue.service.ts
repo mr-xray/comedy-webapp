@@ -37,7 +37,7 @@ export class EventQueueService extends Subject<AppEvent> {
       this.triggers.set(triggerType[1], [])
     );
     geolocation$.subscribe((position) => {
-      console.log('sos');
+      //console.log('sos');
     });
   }
   private events: Map<number, AppEvent>;

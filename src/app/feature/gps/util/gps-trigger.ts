@@ -1,21 +1,25 @@
 import {
   TriggerPayload,
   TriggerType,
+  TriggerTypeController,
 } from 'src/app/data_access/websocket/util/triggers';
 
+@TriggerTypeController.register(TriggerType.GPS)
 export class GpsTriggerPayload implements TriggerPayload {
   constructor(
     obscure: boolean,
     sequence: number,
     markerIcon: string,
+    passedMarkerIcon: string,
+    coordinates: any,
     radius: number,
     direction: CompassDirection,
-    description: string,
-    coordinates: any
+    description: string
   ) {
     this.obscure = obscure;
     this.sequence = sequence;
     this.markerIcon = markerIcon;
+    this.passedMarkerIcon = passedMarkerIcon;
     this.radius = radius;
     this.direction = direction;
     this.description = description;
@@ -25,6 +29,7 @@ export class GpsTriggerPayload implements TriggerPayload {
   obscure: boolean;
   sequence: number;
   markerIcon: string;
+  passedMarkerIcon: string;
   coordinates: {
     latitude: number;
     longitude: number;
