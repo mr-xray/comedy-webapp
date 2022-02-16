@@ -3,16 +3,12 @@
     {
       "username": "root",
       "password": "root",
-      "roles": [
-        "admin"
-      ]
+      "roles": ["admin"]
     },
     {
       "username": "admin_user",
       "password": "Cisco123",
-      "roles": [
-        "admin"
-      ]
+      "roles": ["admin"]
     }
   ],
   "events": [
@@ -20,12 +16,13 @@
       "id": 1,
       "name": "Station Hornbahn II",
       "description": "Die Station Hornbahn 2 ist einer von 5 Stops auf dem Lift auf der Bichl Alm",
+      "type": "VIDEO",
       "triggers": [
         {
           "id": 1,
+          "priority": 64,
+          "type": "GPS",
           "payload": {
-            "priority": 64,
-            "type": "GPS",
             "obscure": false,
             "sequence": 1,
             "markerIcon": "jakob-galaxy.at/markers/questionmarkIcon.svg",
@@ -40,9 +37,9 @@
         },
         {
           "id": 2,
+          "type": "GPS",
+          "priority": 64,
           "payload": {
-            "type": "GPS",
-            "priority": 64,
             "obscure": true,
             "sequence": 1,
             "markerIcon": "not.applicable/because/trigger/is.obscure",
@@ -57,15 +54,14 @@
         },
         {
           "id": 3,
+          "type": "MANUAL",
+          "priority": 128,
           "payload": {
-            "type": "MANUAL",
-            "priority": 128,
             "minDuration": 5000
           }
         }
       ],
       "payload": {
-        "type": "VIDEO",
         "url": "https://www.youtube.com/embed/-jhBDFaRFVc",
         "width": 960,
         "height": 540,
@@ -76,14 +72,15 @@
       "id": 2,
       "name": "Station Hornbahn III",
       "description": "Die Station Hornbahn 3 ist einer von 5 Stops und die Mittelstation auf dem Lift auf der Bichl Alm",
+      "type": "MULTIPLE_CHOICE",
       "triggers": [
         {
           "id": 4,
+          "type": "GPS",
+          "priority": 64,
           "payload": {
-            "type": "GPS",
-            "priority": 64,
             "obscure": false,
-            "sequence": 1,
+            "sequence": 2,
             "markerIcon": "jakob-galaxy.at/markers/chechmarkIcon.svg",
             "coordinates": {
               "latitude": 46.801571,
@@ -96,15 +93,14 @@
         },
         {
           "id": 5,
+          "type": "MANUAL",
+          "priority": 128,
           "payload": {
-            "type": "MANUAL",
-            "priority": 128,
             "minDuration": 10000
           }
         }
       ],
       "payload": {
-        "type": "MULTIPLE_CHOICE",
         "question": "Welche Abfahrten befinden sich im Kitzbühler Schigebiet?",
         "answers": [
           {

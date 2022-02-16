@@ -1,5 +1,3 @@
-import { EventPayload } from './types';
-
 export enum EventIdentifier {
   VIDEO = 'VIDEO',
   IMAGE = 'IMAGE',
@@ -7,14 +5,14 @@ export enum EventIdentifier {
   AUGUMENTED_REALITY = 'AUGUMENTED_REALITY',
 }
 
-export interface VideoEventPayload extends EventPayload {
+export interface VideoEventPayload {
   url: string;
   width: number;
   height: number;
   length: number;
 }
 
-export interface ImageEventPayload extends EventPayload {
+export interface ImageEventPayload {
   url: string;
   width: number;
   height: number;
@@ -25,12 +23,12 @@ interface Answer {
   correct: boolean;
 }
 
-export interface MultipleChoiceQuestionEventPayload extends EventPayload {
+export interface MultipleChoiceQuestionEventPayload {
   question: string;
   answers: Answer[];
 }
 
-export interface AugmentedRealityEventPayload extends EventPayload {
+export interface AugumentedRealityEventPayload {
   url: string;
   width: number;
   height: number;

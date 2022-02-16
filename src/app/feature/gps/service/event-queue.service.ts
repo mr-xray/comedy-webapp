@@ -1,10 +1,9 @@
 import { trigger } from '@angular/animations';
 import { Injectable } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
-import { Observable, PartialObserver, Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import {
   EventTriggerDto,
-  ManualTriggerPayload,
   TriggerEventBinding,
   TriggerType,
 } from 'src/app/data_access/websocket/util/triggers';
@@ -16,14 +15,13 @@ import { UpdatingPrioritySet } from '../util/updating-priority-set';
 @Injectable({
   providedIn: 'root',
 })
-export class EventQueueService {
-  public observable: Subject<AppEvent>;
+export class EventQueueService extends Subject<AppEvent> {
   private poppingLoops = 0;
   private interruptingMap: Map<number, boolean> = new Map<number, boolean>();
-  public constructor(private geolocation$: GeolocationService) {
+  public constructor(private readonly geolocation$: GeolocationService) {
+    super();
     this.triggers = new Map<TriggerType, TriggerEventBinding[]>();
     this.events = new Map<number, AppEvent>();
-    this.observable = new Subject();
     geolocation$.subscribe((position) => {
       for (let triggerBinding of this.triggers.get(TriggerType.GPS) as any) {
         if (triggerBinding) {
@@ -38,19 +36,23 @@ export class EventQueueService {
     Object.entries(TriggerType).forEach((triggerType) =>
       this.triggers.set(triggerType[1], [])
     );
+    geolocation$.subscribe((position) => {
+      console.log('sos');
+    });
   }
-
+  private events: Map<number, AppEvent>;
   /*public get getSequence(): AppEvent[] {
     return this.queue.storage;
   }*/
 
-  public readonly updatingPrioritySet: UpdatingPrioritySet =
+  private readonly updatingPrioritySet: UpdatingPrioritySet =
     new UpdatingPrioritySet();
-  private triggers: Map<TriggerType, TriggerEventBinding[]>;
-  public events: Map<number, AppEvent>;
+  private triggers: Map<TriggerType, TriggerEventBinding[]> = new Map<
+    TriggerType,
+    TriggerEventBinding[]
+  >();
 
-  // Events are submitted when the config is loaded;
-  public submitEvent(event: AppEvent): Observable<AppEvent> {
+  public submitEvent(event: AppEvent): Subject<AppEvent> {
     const triggers: EventTriggerDto[] = event.triggers;
     for (let trigger of triggers) {
       const triggerEventBinding: TriggerEventBinding = {
@@ -61,7 +63,7 @@ export class EventQueueService {
       this.events.set(event.id, event);
       //this.triggers.pushEvent(event);
     }
-    return this.observable;
+    return this;
   }
 
   public triggerManualTrigger(trigger: EventTriggerDto): void {
@@ -115,7 +117,7 @@ export class EventQueueService {
           triggered.type === TriggerType.MANUAL
         ) {
           event.finish = true;
-          this.observable.next(this.events.get(triggered.eventId));
+          this.next(this.events.get(triggered.eventId));
         }
       }
     }

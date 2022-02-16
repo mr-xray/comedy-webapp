@@ -1,11 +1,8 @@
-import { trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
+import { EventIdentifier } from 'src/app/data_access/websocket/util/events';
 import {
-  EventIdentifier,
-  MultipleChoiceQuestionEventPayload,
-} from 'src/app/data_access/websocket/util/events';
-import {
+  EventTriggerDto,
   ManualTriggerPayload,
   TriggerType,
 } from 'src/app/data_access/websocket/util/triggers';
@@ -103,7 +100,7 @@ export class MapComponent implements OnInit {
   ) {
     this.eventQueue = eventQueue;
     this.eventQueue.submitEvent(this.event);
-    this.eventQueue.observable.subscribe((ev) => {
+    this.eventQueue.subscribe((ev) => {
       console.log('Trigger ');
       ev.triggers.forEach((t) => {
         if (t.type === TriggerType.GPS) {

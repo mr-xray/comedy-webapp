@@ -6,11 +6,9 @@ export interface EventDto {
   triggers: EventTriggerDto[];
   name: string;
   description: string;
-  payload: EventPayload;
+  payload: any;
   type: EventIdentifier;
 }
 export interface AppEvent extends EventDto {
   finish: boolean;
 }
-
-export interface EventPayload {}
