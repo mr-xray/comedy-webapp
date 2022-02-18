@@ -1,10 +1,12 @@
 import {
-  ManualTriggerPayload,
   TriggerEventBinding,
   TriggerType,
-} from 'src/app/data_access/websocket/util/triggers';
+} from 'src/app/data_access/trigger-registration/triggers';
 import { AppEvent } from 'src/app/data_access/websocket/util/types';
-import { GpsTriggerPayload } from './gps-trigger';
+import {
+  ManualTriggerPayload,
+  GpsTriggerPayload,
+} from '../../../data_access/trigger-registration/trigger-type-controller';
 
 export class UpdatingPrioritySet {
   public constructor() {}

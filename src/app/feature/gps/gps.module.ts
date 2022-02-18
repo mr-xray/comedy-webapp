@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { MapComponent } from './components/map/map.component';
 import { GeolocationService, POSITION_OPTIONS } from '@ng-web-apis/geolocation';
 import { WebsocketModule } from 'src/app/data_access/websocket/websocket.module';
+import { TriggerRegistrationModule } from 'src/app/data_access/trigger-registration/trigger-registration.module';
 
 @NgModule({
   declarations: [MapComponent],
-  imports: [CommonModule, WebsocketModule],
+  imports: [CommonModule, WebsocketModule, TriggerRegistrationModule],
   providers: [
     GeolocationService,
     {

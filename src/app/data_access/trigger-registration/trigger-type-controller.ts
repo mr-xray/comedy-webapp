@@ -1,21 +1,62 @@
-import {
-  TriggerPayload,
-  TriggerType,
-} from 'src/app/data_access/websocket/util/triggers';
+import { TriggerType, TriggerPayload } from './triggers';
+export namespace TriggerTypeController {
+  export type Constructor<T> = {
+    new (...args: any[]): T;
+    readonly prototype: T;
+  };
+  const mapping: Map<TriggerType, Constructor<TriggerPayload>> = new Map<
+    TriggerType,
+    Constructor<TriggerPayload> //Constructor<TriggerPayload>
+  >();
+  export function getImplementations(): Map<
+    TriggerType,
+    Constructor<TriggerPayload> //Constructor<TriggerPayload>
+  > {
+    return mapping;
+  }
+  export function register(mapTo: TriggerType) {
+    return (ctor: Constructor<TriggerPayload>) => {
+      //console.log('registering ', ctor);
+      mapping.set(mapTo, ctor);
+    };
+  }
+}
 
+export enum CompassDirection {
+  NORTH = 'NORTH',
+  SOUTH = 'SOUTH',
+  EAST = 'EAST',
+  WEST = 'WEST',
+}
+
+@TriggerTypeController.register(TriggerType.MANUAL)
+export class ManualTriggerPayload implements TriggerPayload {
+  constructor(minDuration: number) {
+    this.minDuration = minDuration;
+  }
+
+  minDuration: number;
+  trigger(triggeringObject: any) {
+    return true;
+  }
+}
+
+@TriggerTypeController.register(TriggerType.GPS)
 export class GpsTriggerPayload implements TriggerPayload {
   constructor(
     obscure: boolean,
     sequence: number,
     markerIcon: string,
+    passedMarkerIcon: string,
+    coordinates: any,
     radius: number,
     direction: CompassDirection,
-    description: string,
-    coordinates: any
+    description: string
   ) {
     this.obscure = obscure;
     this.sequence = sequence;
     this.markerIcon = markerIcon;
+    this.passedMarkerIcon = passedMarkerIcon;
     this.radius = radius;
     this.direction = direction;
     this.description = description;
@@ -25,6 +66,7 @@ export class GpsTriggerPayload implements TriggerPayload {
   obscure: boolean;
   sequence: number;
   markerIcon: string;
+  passedMarkerIcon: string;
   coordinates: {
     latitude: number;
     longitude: number;
@@ -64,11 +106,4 @@ export class GpsTriggerPayload implements TriggerPayload {
   private toRad(value: number): number {
     return (value * Math.PI) / 180;
   }
-}
-
-export enum CompassDirection {
-  NORTH = 'NORTH',
-  SOUTH = 'SOUTH',
-  EAST = 'EAST',
-  WEST = 'WEST',
 }
