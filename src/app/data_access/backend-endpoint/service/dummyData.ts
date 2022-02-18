@@ -17,8 +17,10 @@ export const config = {
           payload: {
             obscure: false,
             sequence: 1,
-            markerIcon: 'jakob-galaxy.at/markers/questionmarkIcon.svg',
-            passedMarkerIcon: 'jakob-galaxy.at/markers/questionmarkIcon.svg',
+            markerIcon:
+              'https://cdn.discordapp.com/attachments/545999117214810142/944210492958838794/unknown.png',
+            passedMarkerIcon:
+              'https://cdn.discordapp.com/attachments/545999117214810142/944210491939627038/unknown.png',
             coordinates: {
               latitude: 46.801571,
               longitude: 15.540631,
@@ -78,9 +80,12 @@ export const config = {
           payload: {
             obscure: false,
             sequence: 2,
-            markerIcon: 'jakob-galaxy.at/markers/chechmarkIcon.svg',
+            markerIcon:
+              'https://cdn.discordapp.com/attachments/545999117214810142/944210492233248829/unknown.png',
+            passedMarkerIcon:
+              'https://cdn.discordapp.com/attachments/545999117214810142/944210492535234580/unknown.png',
             coordinates: {
-              latitude: 46.801571,
+              latitude: 44.801571,
               longitude: 15.540631,
             },
             radius: 20.5,

@@ -6,9 +6,9 @@ import {
   EventTriggerDto,
   TriggerEventBinding,
   TriggerType,
-} from 'src/app/data_access/websocket/util/triggers';
+} from 'src/app/data_access/trigger-registration/triggers';
 import { AppEvent } from 'src/app/data_access/websocket/util/types';
-import { GpsTriggerPayload } from '../util/gps-trigger';
+import { GpsTriggerPayload } from '../../../data_access/trigger-registration/trigger-type-controller';
 import { Queue } from '../util/queue';
 import { UpdatingPrioritySet } from '../util/updating-priority-set';
 
@@ -53,6 +53,7 @@ export class EventQueueService extends Subject<AppEvent> {
   >();
 
   public submitEvent(event: AppEvent): Subject<AppEvent> {
+    console.log('Submission received: ', event);
     const triggers: EventTriggerDto[] = event.triggers;
     for (let trigger of triggers) {
       const triggerEventBinding: TriggerEventBinding = {
@@ -128,5 +129,13 @@ export class EventQueueService extends Subject<AppEvent> {
     if (top) {
       this.reInitiateSetTriggerLoop();
     }
+  }
+
+  public get unobscureGpsTriggers(): TriggerEventBinding[] {
+    return (
+      this.triggers
+        .get(TriggerType.GPS)
+        ?.filter((t) => !(t.payload as GpsTriggerPayload).obscure) ?? []
+    );
   }
 }

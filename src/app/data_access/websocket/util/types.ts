@@ -1,5 +1,5 @@
 import { EventIdentifier } from './events';
-import { EventTriggerDto, TriggerPayload, TriggerType } from './triggers';
+import { EventTriggerDto } from '../../trigger-registration/triggers';
 
 export interface EventDto {
   id: number;
