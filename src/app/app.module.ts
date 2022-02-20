@@ -11,6 +11,8 @@ import { EventTypeModule } from './feature/event-type/event-type.module';
 import { GpsModule } from './feature/gps/gps.module';
 import { EventBaseFrameModule } from './ui/event-base-frame/event-base-frame.module';
 import { TitleBarModule } from './ui/title-bar/title-bar.module';
+import { IFrameXssBypassModule } from './util/iframe-xss-bypass/iframe-xss-bypass.module';
+import { IFrameTrustedPipe } from './util/iframe-xss-bypass/pipe/iframe-trusted.pipe';
 
 const config: SocketIoConfig = {
   url: 'https://jakob-galaxy.at:3000',
@@ -25,6 +27,7 @@ const config: SocketIoConfig = {
     EventBaseFrameModule,
     HttpClientModule,
     TitleBarModule,
+    IFrameXssBypassModule,
     SocketIoModule.forRoot(config),
   ],
   providers: [

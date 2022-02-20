@@ -1,11 +1,12 @@
-<video
-  controls
-  *ngif="payload.url !== ''"
-  (click)="toggleVideo()"
-  #videoPlayer
-  autoplay
->
+<!--<video controls (click)="toggleVideo()" #videoPlayer autoplay>
   <source src="{{ payload.url }}" type="video/mp4" />
   Browser nicht unterstützt :/
 </video>
-<p><a href="https://www.youtube.com/watch?v=XobfNEFyhdg">YouTube</a></p>
+<p><a href="https://www.youtube.com/watch?v=XobfNEFyhdg">YouTube</a></p>-->
+<iframe
+  width="100%"
+  height="100%"
+  [src]="payload.url + '?autoplay=1&controls=0' | trusted"
+  frameborder="0"
+>
+</iframe>

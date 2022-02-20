@@ -11,8 +11,16 @@ export class EventBaseFrameComponent implements OnInit {
   private _eventDescription: string = '';
   ngOnInit(): void {}
 
+  public get eventTitle(): string {
+    return this._eventTitle;
+  }
+
+  public get eventDescription(): string {
+    return this._eventDescription;
+  }
+
   public set eventTitle(title: string) {
-    this.eventTitle = title;
+    this._eventTitle = title;
   }
 
   public set eventDescription(description: string) {

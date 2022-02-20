@@ -23,6 +23,32 @@
 }
 
 #event-card-contents {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#title {
+  color: var(--color-gray);
+}
+
+#event-header {
+  width: 95%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#event-info {
+  height: 4.6875rem;
+  width: 4.6875rem;
+}
+
+#event-contents {
   height: 90%;
   width: 90%;
 }

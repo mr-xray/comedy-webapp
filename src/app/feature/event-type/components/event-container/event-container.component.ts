@@ -12,17 +12,18 @@ export class EventContainerComponent implements OnInit {
   public EventIdentifier: typeof EventIdentifier = EventIdentifier;
   public eventType: EventIdentifier | undefined;
   public eventPayload: any;
-  @Output() eventTitle: EventEmitter<string> = new EventEmitter<string>();
-  @Output() eventDescription: EventEmitter<string> = new EventEmitter<string>();
+  @Output() eventDescription = new EventEmitter<string>();
+  @Output() eventTitle = new EventEmitter<string>();
 
   constructor(private readonly eventQueue: EventQueueService) {}
 
   ngOnInit(): void {
     this.eventQueue.subscribe((event) => {
+      console.log(event);
       this.eventType = event.type;
       this.eventPayload = event.payload;
-      this.eventTitle.emit(event.name);
       this.eventDescription.emit(event.description);
+      this.eventTitle.emit(event.name);
     });
   }
 }

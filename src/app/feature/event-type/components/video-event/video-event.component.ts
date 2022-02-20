@@ -17,9 +17,9 @@ export class VideoEventComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  @ViewChild('videoplayer') private videoplayer: any;
+  /*@ViewChild('videoplayer') private videoplayer: any;
   toggleVideo() {
     this.videoplayer.nativeElement.play();
     // this.videoplayer.nativeElement.pause();}
-  }
+  }*/
 }

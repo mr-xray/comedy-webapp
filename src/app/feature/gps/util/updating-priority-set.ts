@@ -51,7 +51,6 @@ export class UpdatingPrioritySet {
       let index: number = this.findMaxBinaryIndex(val);
       this._store.splice(index, 0, val);
     }
-
     // If event
     if (this.top()?.id === val.id) {
       this._activeTriggerDuration = undefined;
@@ -80,10 +79,8 @@ export class UpdatingPrioritySet {
     let triggerd: TriggerEventBinding | undefined;
     if (this._activeTriggerDuration !== undefined) {
       if (
-        new Date(
-          this._activeTriggerDuration.startDate.valueOf() +
-            this._activeTriggerDuration.duration
-        ).valueOf() <= new Date().valueOf()
+        this.activeTriggerDuration &&
+        this.activeTriggerDuration <= new Date().valueOf()
       ) {
         triggerd = this._store.pop();
         this._activeTriggerDuration = {
@@ -94,7 +91,7 @@ export class UpdatingPrioritySet {
         throw new Error('Active Event time has no yet ended');
       }
     }
-    return triggerd;
+    return this._store.pop();
   }
 
   public top(): TriggerEventBinding | undefined {
@@ -105,10 +102,17 @@ export class UpdatingPrioritySet {
     return this._store;
   }
 
-  public get activeTriggerDuration():
-    | { startDate: Date; duration: number }
-    | undefined {
-    return this._activeTriggerDuration;
+  public get activeTriggerDuration(): number | undefined {
+    if (
+      this._activeTriggerDuration?.startDate &&
+      this._activeTriggerDuration.duration
+    ) {
+      return (
+        this._activeTriggerDuration?.startDate.valueOf() +
+        this._activeTriggerDuration.duration
+      );
+    }
+    return undefined;
   }
 
   public pushEvent(event: AppEvent): void {

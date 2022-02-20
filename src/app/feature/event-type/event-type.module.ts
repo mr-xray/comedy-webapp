@@ -5,6 +5,7 @@ import { VideoEventComponent } from './components/video-event/video-event.compon
 import { AugmentedRealityEventComponent } from './components/augmented-reality-event/augmented-reality-event.component';
 import { MultipleChoiceQuestionEventComponent } from './components/multiple-choice-question-event/multiple-choice-question-event.component';
 import { EventContainerComponent } from './components/event-container/event-container.component';
+import { IFrameXssBypassModule } from 'src/app/util/iframe-xss-bypass/iframe-xss-bypass.module';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,7 @@ import { EventContainerComponent } from './components/event-container/event-cont
     MultipleChoiceQuestionEventComponent,
     EventContainerComponent,
   ],
-  imports: [CommonModule],
+  imports: [CommonModule, IFrameXssBypassModule],
   exports: [EventContainerComponent],
 })
 export class EventTypeModule {}
