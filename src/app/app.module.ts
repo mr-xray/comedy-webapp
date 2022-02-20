@@ -7,7 +7,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { JwtHttpInterceptor } from './data_access/authentication/interceptor/jwt-http.interceptor';
 import { ConfigService } from './data_access/backend-endpoint/service/config.service';
+import { EventTypeModule } from './feature/event-type/event-type.module';
 import { GpsModule } from './feature/gps/gps.module';
+import { EventBaseFrameModule } from './ui/event-base-frame/event-base-frame.module';
 import { TitleBarModule } from './ui/title-bar/title-bar.module';
 
 const config: SocketIoConfig = {
@@ -20,6 +22,7 @@ const config: SocketIoConfig = {
     BrowserModule,
     AppRoutingModule,
     GpsModule,
+    EventBaseFrameModule,
     HttpClientModule,
     TitleBarModule,
     SocketIoModule.forRoot(config),

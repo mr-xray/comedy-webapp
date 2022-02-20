@@ -15,5 +15,6 @@ import { TriggerRegistrationModule } from 'src/app/data_access/trigger-registrat
       useValue: { enableHighAccuracy: true, timeout: 3000, maximumAge: 1000 },
     },
   ],
+  exports: [MapComponent],
 })
 export class GpsModule {}
