@@ -1,1 +1,18 @@
-<div id="content"></div>
+<div id="content">
+  <app-image-event
+    [payload]="eventPayload"
+    *ngIf="eventType === EventIdentifier.Image"
+  ></app-image-event>
+  <app-augmented-reality-event
+    [payload]="eventPayload"
+    *ngIf="eventType === EventIdentifier.AugmentedReality"
+  ></app-augmented-reality-event>
+  <app-video-event
+    [payload]="eventPayload"
+    *ngIf="eventType === EventIdentifier.Video"
+  ></app-video-event>
+  <app-multiple-choice-question-event
+    [payload]="eventPayload"
+    *ngIf="eventType === EventIdentifier.MultipleChoice"
+  ></app-multiple-choice-question-event>
+</div>

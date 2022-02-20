@@ -1,3 +1,10 @@
 <div id="frame">
-  <app-event-container id="event-container"></app-event-container>
+  <div id="event-card">
+    <div id="event-card-contents"></div>
+    <h1 id="title">{{ eventTitle }}</h1>
+    <app-event-container
+      (eventTitle)="eventTitle = $event"
+      (eventDescription)="eventDescription = $event"
+    ></app-event-container>
+  </div>
 </div>

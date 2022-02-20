@@ -1,8 +1,8 @@
 export enum EventIdentifier {
-  VIDEO = 'VIDEO',
-  IMAGE = 'IMAGE',
-  MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
-  AUGUMENTED_REALITY = 'AUGUMENTED_REALITY',
+  Video = 'VIDEO',
+  Image = 'IMAGE',
+  MultipleChoice = 'MULTIPLE_CHOICE',
+  AugmentedReality = 'AUGMENTED_REALITY',
 }
 
 export interface VideoEventPayload {
@@ -28,7 +28,7 @@ export interface MultipleChoiceQuestionEventPayload {
   answers: Answer[];
 }
 
-export interface AugumentedRealityEventPayload {
+export interface AugmentedRealityEventPayload {
   url: string;
   width: number;
   height: number;

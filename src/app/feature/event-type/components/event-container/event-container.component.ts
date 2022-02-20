@@ -1,15 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { EventIdentifier } from 'src/app/data_access/websocket/util/events';
+import { AppEvent } from 'src/app/data_access/websocket/util/types';
+import { EventQueueService } from 'src/app/feature/gps/service/event-queue.service';
 
 @Component({
   selector: 'app-event-container',
   templateUrl: './event-container.component.html',
-  styleUrls: ['./event-container.component.scss']
+  styleUrls: ['./event-container.component.scss'],
 })
 export class EventContainerComponent implements OnInit {
+  public EventIdentifier: typeof EventIdentifier = EventIdentifier;
+  public eventType: EventIdentifier | undefined;
+  public eventPayload: any;
+  @Output() eventTitle: EventEmitter<string> = new EventEmitter<string>();
+  @Output() eventDescription: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor() { }
+  constructor(private readonly eventQueue: EventQueueService) {}
 
   ngOnInit(): void {
+    this.eventQueue.subscribe((event) => {
+      this.eventType = event.type;
+      this.eventPayload = event.payload;
+      this.eventTitle.emit(event.name);
+      this.eventDescription.emit(event.description);
+    });
   }
-
 }

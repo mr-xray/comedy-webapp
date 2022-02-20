@@ -1,1 +1,4 @@
-<p>multiple-choice-question-event works!</p>
+<h1>{{ payload.question }}</h1>
+<div id="answers" *ngFor="let answer of payload.answers">
+  <p>{{ answer.answer }}</p>
+</div>
