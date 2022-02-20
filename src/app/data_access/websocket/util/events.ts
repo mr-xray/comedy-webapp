@@ -7,15 +7,17 @@ export enum EventIdentifier {
 
 export interface VideoEventPayload {
   url: string;
-  width: number;
-  height: number;
-  length: number;
+  width?: string;
+  height?: string;
+  length?: number;
+  borderRadius?: string;
 }
 
 export interface ImageEventPayload {
   url: string;
-  width: number;
-  height: number;
+  width?: string;
+  height?: string;
+  borderRadius?: string;
 }
 
 interface Answer {

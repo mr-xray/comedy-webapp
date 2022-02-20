@@ -8,7 +8,8 @@ export const config = {
       name: 'Station Hornbahn II',
       description:
         'Die Station Hornbahn 2 ist einer von 5 Stops auf dem Lift auf der Bichl Alm',
-      type: 'VIDEO',
+      //type: 'VIDEO',
+      type: 'IMAGE',
       triggers: [
         {
           id: 1,
@@ -60,10 +61,14 @@ export const config = {
         },
       ],
       payload: {
-        url: 'https://www.youtube.com/embed/-jhBDFaRFVc',
-        width: 960,
-        height: 540,
-        length: 521000,
+        //url: 'https://www.youtube.com/embed/-jhBDFaRFVc',
+        url: 'https://stockphoto.com/samples/ODQxMjMzNTQyMDAxMWY1YmNmYjBlZA==/MjIxMWY1YmNmYjBlZA==/golden-retriever-dog-lying-with-rubber-ball-on-green-lawn.jpg&size=1024',
+        //width: 960,
+        //height: 540,
+        width: '100%',
+        height: '100%',
+        borderRadius: '1rem',
+        //length: 521000,
       },
     },
     {

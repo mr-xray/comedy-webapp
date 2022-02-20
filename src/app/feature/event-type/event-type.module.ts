@@ -6,6 +6,7 @@ import { AugmentedRealityEventComponent } from './components/augmented-reality-e
 import { MultipleChoiceQuestionEventComponent } from './components/multiple-choice-question-event/multiple-choice-question-event.component';
 import { EventContainerComponent } from './components/event-container/event-container.component';
 import { IFrameXssBypassModule } from 'src/app/util/iframe-xss-bypass/iframe-xss-bypass.module';
+import { WebsocketModule } from 'src/app/data_access/websocket/websocket.module';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,7 @@ import { IFrameXssBypassModule } from 'src/app/util/iframe-xss-bypass/iframe-xss
     MultipleChoiceQuestionEventComponent,
     EventContainerComponent,
   ],
-  imports: [CommonModule, IFrameXssBypassModule],
+  imports: [CommonModule, IFrameXssBypassModule, WebsocketModule],
   exports: [EventContainerComponent],
 })
 export class EventTypeModule {}

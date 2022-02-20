@@ -4,9 +4,9 @@
 </video>
 <p><a href="https://www.youtube.com/watch?v=XobfNEFyhdg">YouTube</a></p>-->
 <iframe
-  width="100%"
-  height="100%"
   [src]="payload.url + '?autoplay=1&controls=0' | trusted"
   frameborder="0"
+  id="videoplayer"
+  [ngStyle]="setStyle()"
 >
 </iframe>

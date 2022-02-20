@@ -1,6 +1,6 @@
 <img
+  [ngStyle]="imageStyle()"
   *ngIf="payload.url !== ''"
-  [ngStyle]="{ width: payload.width, height: payload.height }"
   src="{{ payload.url }}"
   alt="Bild konnte nicht geladen werden :/"
 />
