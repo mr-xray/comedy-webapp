@@ -62,7 +62,7 @@ export const config = {
       ],
       payload: {
         //url: 'https://www.youtube.com/embed/-jhBDFaRFVc',
-        url: 'https://stockphoto.com/samples/ODQxMjMzNTQyMDAxMWY1YmNmYjBlZA==/MjIxMWY1YmNmYjBlZA==/golden-retriever-dog-lying-with-rubber-ball-on-green-lawn.jpg&size=1024',
+        url: 'https://cdn.discordapp.com/attachments/545999117214810142/945258236653752400/depositphotos_47349533-stock-photo-labrador-retriever.png',
         //width: 960,
         //height: 540,
         width: '100%',
@@ -93,7 +93,7 @@ export const config = {
               latitude: 44.801571,
               longitude: 15.540631,
             },
-            radius: 20.5,
+            radius: 2000000.5,
             direction: 'NORTH',
             description:
               'An diesem Punkt befindet sich die Station Hornbahn III',

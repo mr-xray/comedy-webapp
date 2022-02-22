@@ -56,7 +56,7 @@ export class EventQueueService extends Subject<AppEvent> {
   >();
 
   public submitEvent(event: AppEvent): Subject<AppEvent> {
-    console.log('Submission received: ', event);
+    //console.log('Submission received: ', event);
     const triggers: EventTriggerDto[] = event.triggers;
     for (let trigger of triggers) {
       const triggerEventBinding: TriggerEventBinding = {

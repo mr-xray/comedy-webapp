@@ -1,4 +1,21 @@
-<h1>{{ payload.question }}</h1>
-<div id="answers" *ngFor="let answer of payload.answers">
-  <p>{{ answer.answer }}</p>
+<div id="question-card">
+  <div id="question-card-content">
+    <div id="question-info-header">
+      <img src="/assets/images/question.svg" alt="Frage" />
+      <p>Frage</p>
+    </div>
+    <p id="question-text">{{ question }}</p>
+    <div
+      class="answer"
+      *ngFor="let answer of questionNumeration"
+      attr.id="{{ answer[0] }}"
+      (click)="selectAnswer(answer[0])"
+    >
+      <div>{{ answer[0] }}</div>
+      <div class="answer-text">{{ answer[1] }}</div>
+    </div>
+    <div id="submit-container">
+      <div id="submit-button">Antworten</div>
+    </div>
+  </div>
 </div>
