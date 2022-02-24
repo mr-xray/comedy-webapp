@@ -70,14 +70,14 @@ export class EventQueueService extends Subject<AppEvent> {
     return this;
   }
 
-  public triggerManualTrigger(trigger: EventTriggerDto): void {
-    if (trigger.type === TriggerType.MANUAL) {
+  public triggerManualTrigger(trigger: number): void {
+    if (trigger) {
       let manuals: TriggerEventBinding[] | undefined = this.triggers.get(
         TriggerType.MANUAL
       );
       if (manuals) {
         for (let tr of manuals) {
-          if (tr.id === trigger.id) {
+          if (tr.id === trigger) {
             this.doUpdateCheck(tr);
           }
         }
