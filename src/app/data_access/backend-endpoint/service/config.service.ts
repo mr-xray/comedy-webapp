@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EventQueueService } from 'src/app/feature/gps/service/event-queue.service';
+import { environment } from 'src/environments/environment';
 import { JwtProviderService } from '../../authentication/service/jwt-provider.service';
 import {
   GpsTriggerPayload,
@@ -18,7 +19,7 @@ import { config } from './dummyData';
   providedIn: 'root',
 })
 export class ConfigService extends BehaviorSubject<AppEvent[]> {
-  private static readonly configUrl: string = 'jakob-galaxy.at/config';
+  private static readonly configUrl: string = `${environment.apiUrl}/events`;
   constructor(
     private readonly http: HttpClient,
     private readonly eventQueue: EventQueueService,

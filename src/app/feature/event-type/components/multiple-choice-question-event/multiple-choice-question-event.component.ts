@@ -44,4 +44,6 @@ export class MultipleChoiceQuestionEventComponent implements OnInit {
     this.selectedAnswers.set(src, !this.selectedAnswers.get(src));
     document.getElementById(src)?.classList.toggle('activated-answer');
   }
+
+  public submitAnswer() {}
 }

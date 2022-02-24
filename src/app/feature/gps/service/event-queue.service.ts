@@ -92,17 +92,17 @@ export class EventQueueService extends Subject<AppEvent> {
     // * New triggers with higher priority so the current loop needs to be interrupted because
     // --> Method has been called another time to override the current event so this loop needs to stop
     let poppingLoop = ++this.poppingLoops;
-    console.log('New entry on interruption map: ', this.interruptingMap);
+    //console.log('New entry on interruption map: ', this.interruptingMap);
     for (let entry of this.interruptingMap.entries()) {
       this.interruptingMap.set(entry[0], true);
     }
     this.interruptingMap.set(poppingLoop, false);
     while (this.updatingPrioritySet.storage.length !== 0) {
       let endTime = this.updatingPrioritySet.activeTriggerDuration ?? 0;
-      console.log(this.updatingPrioritySet.storage.length);
+      //console.log(this.updatingPrioritySet.storage.length);
       // If active trigger is not over yet, wait until it is
       if (new Date().valueOf() < endTime) {
-        console.log('Not ready yet');
+        //console.log('Not ready yet');
         await new Promise((resolve) => {
           setTimeout(resolve, endTime - new Date().valueOf());
         });
@@ -114,7 +114,7 @@ export class EventQueueService extends Subject<AppEvent> {
       // The executing instance of reInitiateSetLoop is always that which was triggered by the currently executing trigger
       // The currently executing trigger is the trigger with the highest priority of those, who have been triggered
       if (this.interruptingMap.get(poppingLoop)) {
-        console.log('I was interrupted');
+        //console.log('I was interrupted');
         this.interruptingMap.delete(poppingLoop);
         return;
       }

@@ -99,7 +99,7 @@ export class WebsocketService {
       return;
     }
 
-    console.log(this.jwt.getEarlyExpiryDate(), new Date());
+    //console.log(this.jwt.getEarlyExpiryDate(), new Date());
     if (
       !this.jwt.getEarlyExpiryDate() ||
       (this.jwt.getEarlyExpiryDate() as Date) < new Date()

@@ -1,0 +1,14 @@
+:host,
+#form,
+#failure {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#failure {
+  background-color: rgba(255, 0, 0, 0.5);
+  padding: 1rem;
+  border-radius: 1rem;
+}

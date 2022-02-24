@@ -1,0 +1,24 @@
+<h1>Administrator-Anmeldung</h1>
+<div *ngIf="authFailure" id="failure">
+  <p>Authentifizierung fehlgeschlagen!</p>
+  <p>Falscher Benutzername oder Kennwort.</p>
+</div>
+<form [formGroup]="loginForm" (ngSubmit)="authenticate()" id="form">
+  <label for="username">Benutzername</label>
+  <input
+    type="text"
+    name="username"
+    id="username"
+    placeholder="Benutzername"
+    formControlName="username"
+  />
+  <label for="password">Kennwort</label>
+  <input
+    type="password"
+    name="password"
+    id="password"
+    placeholder="Kennwort"
+    formControlName="password"
+  />
+  <input type="submit" value="Anmelden" />
+</form>

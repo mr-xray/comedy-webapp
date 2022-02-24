@@ -9,7 +9,8 @@ import { JwtResultDto } from '../types';
   providedIn: 'root',
 })
 export class JwtProviderService {
-  private static readonly authUrl: string = 'jakob-galaxy.at/login';
+  private static readonly authUrl: string = 'jakob-galaxy.at/auth/login';
+  private static readonly refreshUrl: string = 'jakob-galaxy.at/auth/refresh';
   private static readonly authHttpHeader = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
@@ -19,9 +20,13 @@ export class JwtProviderService {
   constructor(private http: HttpClient) {}
 
   public auth(credentials?: { username: string; password: string }) {
-    let postBody = credentials ?? { username: uuid(), password: '' };
-    this.forgeAuthRequest(postBody).subscribe((jwt) => this.setSession);
-    /*setTimeout(() => {
+    let credent = uuid();
+    let postBody = credentials ?? { username: credent, password: credent };
+    this.forgeAuthRequest(JwtProviderService.authUrl, postBody).subscribe(
+      (jwt) => this.setSession
+    );
+
+    setTimeout(() => {
       this.setSession({
         username: uuid(),
         jwt: 'jwttoken',
@@ -29,16 +34,18 @@ export class JwtProviderService {
         refresh: 'refreshtokenhahah',
         expiresIn: 20000,
       });
-    }, 2000);*/
+    }, 2000);
   }
 
   public renewToken() {
-    let obs = this.forgeAuthRequest({ refresh: this.refreshToken });
+    let obs = this.forgeAuthRequest(JwtProviderService.refreshUrl, {
+      refresh: this.refreshToken,
+    });
     obs.subscribe((jwt) => this.setSession);
     return obs;
   }
 
-  private forgeAuthRequest(authBody: any) {
+  private forgeAuthRequest(url: string, authBody: any) {
     return this.http.post(
       JwtProviderService.authUrl,
       authBody,
@@ -51,13 +58,14 @@ export class JwtProviderService {
     sessionStorage.setItem('jwt', authResult.jwt);
     sessionStorage.setItem('username', authResult.username);
     sessionStorage.setItem('role', authResult.role);
-    console.log(moment().valueOf(), authResult.expiresIn);
+    //console.log(moment().valueOf(), authResult.expiresIn);
     sessionStorage.setItem(
       'expires_at',
       JSON.stringify(
         moment().add(authResult.expiresIn, 'millisecond').valueOf()
       )
     );
+    console.log('new authProccess processed');
     this.authProcess.next(!!sessionStorage.getItem('jwt'));
     //sessionStorage.setItem('refreshToken', authResult.refresh);
   }
