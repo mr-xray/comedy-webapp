@@ -59,15 +59,16 @@ export class AdminMapComponent implements OnInit {
         (t.payload as GpsTriggerPayload).coordinates.longitude,
         (t.payload as GpsTriggerPayload).coordinates.latitude,
         this.createLayer((t.payload as GpsTriggerPayload).markerIcon),
-        this.featureId++
+        ++this.featureId
       )
     );
     let layer = this.createLayer(environment.customerIconPath);
     this.websocket.userLocations.subscribe((location) => {
-      let featureId = this.userLocations.get(location.username)?.featureId;
-      if (!featureId) {
-        featureId = this.featureId++;
-      }
+      let toRemove: boolean = !!this.userLocations.get(location.username);
+      let featureId =
+        this.userLocations.get(location.username)?.featureId ??
+        ++this.featureId;
+      //console.log('[Map]: new user movement detected, markerid', featureId);
       this.userLocations.set(location.username, {
         featureId: featureId,
         role: location.role,
@@ -76,14 +77,21 @@ export class AdminMapComponent implements OnInit {
           longitude: location.location.longitude,
         },
       });
-      if (this.featureId !== featureId + 1) {
+      /*console.log(
+        '[Map]: placing new coords in map: ',
+        this.userLocations.get(location.username)
+      );*/
+      if (toRemove) {
+        /*console.log(
+          '[Map]: Marker already exists for this feature, removing it'
+        );*/
         this.removeMarker(featureId, layer);
       }
       this.createMarkerForGps(
         location.location.longitude,
         location.location.latitude,
         layer,
-        this.featureId
+        featureId
       );
     });
     this.websocket.initLocationStream();
@@ -125,12 +133,14 @@ export class AdminMapComponent implements OnInit {
       new ol.geom.Point(ol.proj.fromLonLat([lon, lat]))
     );
     marker.setId(featureId);
+    //console.log('creating marker with set id: ', marker.getId());
     layer.getSource().addFeature(marker);
     return marker;
   }
 
   private removeMarker(id: number, layer: any) {
     let feature = layer.getSource().getFeatureById(id);
+    //console.log(feature);
     layer.getSource().removeFeature(feature);
   }
 
@@ -148,6 +158,7 @@ export class AdminMapComponent implements OnInit {
         }),
       });
       this.markerMap.set(url, layer);
+      //console.log('[Map] new layer: ', layer);
       this.map.addLayer(layer);
     }
     return this.markerMap.get(url);

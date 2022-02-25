@@ -87,6 +87,34 @@ export class WebsocketService {
           }
         )
       );
+
+    //------------------
+    // Test
+    /*let inc = 0;
+    let inc2 = 0;
+    setInterval(() => {
+      this.userLocations.next({
+        username: 'test',
+        role: 'hs',
+        location: {
+          longitude: 15.539918,
+          latitude: 46.800877 + inc / 10000,
+        },
+      });
+      inc++;
+    }, 2000);
+    setInterval(() => {
+      this.userLocations.next({
+        username: 'test2',
+        role: 'hs',
+        location: {
+          longitude: 15.539918 + inc2 / 10000,
+          latitude: 46.801077,
+        },
+      });
+      inc2++;
+    }, 1500);*/
+    //------------------
     this.geolocation$.subscribe((posi) =>
       this.dispatchMessage(SocketCommunicationMessage.Location, {
         latitude: posi.coords.latitude,
