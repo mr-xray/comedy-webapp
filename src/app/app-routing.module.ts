@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { AuthGuard } from './data_access/authentication/guard/auth.guard';
 import { Role } from './data_access/authentication/roles';
+import { AdminDashboardComponent } from './feature/admin/admin-dashboard/admin-dashboard.component';
 import { AdminMapComponent } from './feature/admin/components/admin-map/admin-map.component';
 import { MapComponent } from './feature/gps/components/map/map.component';
 import { AdminLoginComponent } from './feature/login/components/admin-login/admin-login.component';
@@ -13,7 +14,7 @@ export const routes: Routes = [
   { path: 'login', component: AdminLoginComponent },
   {
     path: 'admin',
-    component: AdminMapComponent,
+    component: AdminDashboardComponent,
     canActivate: [AuthGuard],
     data: {
       roles: [Role.Admin],
