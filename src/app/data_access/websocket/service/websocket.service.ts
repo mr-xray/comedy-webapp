@@ -38,6 +38,9 @@ export class WebsocketService {
     private jwt: JwtProviderService,
     private questions: QuestionService
   ) {
+    if (sessionStorage.getItem('jwt')) {
+      this.authorizationSet = true;
+    }
     this.jwt.authProcess.subscribe((res) => {
       if (res) {
         let jwt = sessionStorage.getItem('jwt');
@@ -98,12 +101,13 @@ export class WebsocketService {
       );
   }
 
-  public dispatchManualTrigger(trigger: EventTriggerDto) {
-    this.dispatchMessage(SocketCommunicationMessage.ManualTrigger, trigger.id);
+  public dispatchManualTrigger(trigger: number) {
+    this.dispatchMessage(SocketCommunicationMessage.ManualTrigger, trigger);
   }
 
   private dispatchMessage(channel: SocketCommunicationMessage, payload: any) {
     if (!this.authorizationSet) {
+      console.log('not authroized, buffering');
       this.jwtExpiryBuffer.push({ channel, payload });
       return;
     }
@@ -121,11 +125,13 @@ export class WebsocketService {
       return;
     }
     while (this.jwtExpiryBuffer.length !== 0) {
+      console.log('Working off buffered');
       let emitted = this.jwtExpiryBuffer.shift();
       if (emitted) {
         this.webSocket.emit(emitted.channel, emitted.payload);
       }
     }
+    console.log('emmitting on ', channel);
     this.webSocket.emit(channel, payload);
   }
 }

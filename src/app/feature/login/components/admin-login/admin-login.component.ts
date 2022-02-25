@@ -14,7 +14,12 @@ export class AdminLoginComponent implements OnInit {
     private readonly jwtProvider: JwtProviderService,
     private formBuilder: FormBuilder,
     private readonly router: Router
-  ) {}
+  ) {
+    sessionStorage.removeItem('jwt');
+    sessionStorage.removeItem('role');
+    sessionStorage.removeItem('expires_at');
+    sessionStorage.removeItem('username');
+  }
   public authFailure: boolean = false;
   public loginForm = this.formBuilder.group({
     username: new FormControl(''),

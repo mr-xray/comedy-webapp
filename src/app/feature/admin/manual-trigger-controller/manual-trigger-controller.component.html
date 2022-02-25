@@ -1,1 +1,6 @@
-<p>manual-trigger-controller works!</p>
+<h1>Manuell Event Auslösen:</h1>
+<div *ngFor="let trigger of displayTriggers">
+  <p>Name: {{ trigger.title }}</p>
+  <p>Event-Typ: {{ trigger.type }}</p>
+  <button (click)="triggerManual(trigger.id)">Auslösen</button>
+</div>

@@ -41,7 +41,7 @@ export class JwtProviderService {
         jwt: 'testing-token-lol',
         role: role,
         refresh: 'refreshtokenhahah',
-        expiresIn: 20000,
+        expiresIn: 2000000,
       });
     }, 2000);
   }
