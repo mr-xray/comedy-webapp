@@ -27,7 +27,7 @@ export class AdminLoginComponent implements OnInit {
     this.jwtProvider.auth(this.loginForm.value);
     this.jwtProvider.authProcess.subscribe((event) => {
       if (event) {
-        if (sessionStorage.getItem('role') != Role.Admin) {
+        if (this.jwtProvider.role != Role.Admin) {
           this.authFailure = true;
         } else {
           this.router.navigate(['/admin']);

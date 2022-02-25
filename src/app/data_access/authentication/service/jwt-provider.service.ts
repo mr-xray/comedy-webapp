@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
 import { v4 as uuid } from 'uuid';
+import { Role } from '../roles';
 import { JwtResultDto } from '../types';
 
 @Injectable({
@@ -17,6 +18,7 @@ export class JwtProviderService {
   private uuid: string | undefined;
   private refreshToken: string | undefined;
   public authProcess: Subject<boolean> = new Subject();
+  private _role: Role | undefined;
   constructor(private http: HttpClient) {}
 
   public auth(credentials?: { username: string; password: string }) {
@@ -27,10 +29,17 @@ export class JwtProviderService {
     );
 
     setTimeout(() => {
+      let role = 'USER';
+      if (
+        credentials?.username === 'admin' &&
+        credentials.password === 'admin'
+      ) {
+        role = 'ADMIN';
+      }
       this.setSession({
-        username: uuid(),
-        jwt: 'jwttoken',
-        role: 'ADMIN',
+        username: postBody.username,
+        jwt: 'testing-token-lol',
+        role: role,
         refresh: 'refreshtokenhahah',
         expiresIn: 20000,
       });
@@ -57,7 +66,8 @@ export class JwtProviderService {
     this.refreshToken = authResult.refresh;
     sessionStorage.setItem('jwt', authResult.jwt);
     sessionStorage.setItem('username', authResult.username);
-    sessionStorage.setItem('role', authResult.role);
+    this._role = authResult.role as Role;
+    //sessionStorage.setItem('role', authResult.role);
     //console.log(moment().valueOf(), authResult.expiresIn);
     sessionStorage.setItem(
       'expires_at',
@@ -73,5 +83,9 @@ export class JwtProviderService {
   public getEarlyExpiryDate(): Date | undefined {
     let expiry = sessionStorage.getItem('expires_at');
     return expiry ? new Date(parseFloat(expiry) - 5000) : undefined;
+  }
+
+  public get role(): string | undefined {
+    return this._role;
   }
 }
