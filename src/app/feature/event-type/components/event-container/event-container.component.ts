@@ -12,6 +12,7 @@ export class EventContainerComponent implements OnInit {
   public EventIdentifier: typeof EventIdentifier = EventIdentifier;
   public eventType: EventIdentifier | undefined;
   public eventPayload: any;
+  public eventId: any;
   @Output() eventDescription = new EventEmitter<string>();
   @Output() eventTitle = new EventEmitter<string>();
 
@@ -21,6 +22,7 @@ export class EventContainerComponent implements OnInit {
     this.eventQueue.subscribe((event) => {
       console.log(event);
       this.eventType = event.type;
+      this.eventId = event.id;
       this.eventPayload = event.payload;
       this.eventDescription.emit(event.description);
       this.eventTitle.emit(event.name);

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { QuestionService } from 'src/app/data_access/backend-endpoint/service/question.service';
 import {
   ImageEventPayload,
   MultipleChoiceQuestionEventPayload,
@@ -18,6 +19,8 @@ export class MultipleChoiceQuestionEventComponent implements OnInit {
   public question: string = '';
   private selectedAnswers: Map<string, boolean> = new Map<string, boolean>();
   @Input()
+  public id: number = -1;
+  @Input()
   set payload(pl: MultipleChoiceQuestionEventPayload) {
     this._payload = pl;
     this.question = this._payload.question;
@@ -36,7 +39,7 @@ export class MultipleChoiceQuestionEventComponent implements OnInit {
     }
   }
 
-  constructor() {}
+  constructor(private questionService: QuestionService) {}
 
   ngOnInit(): void {}
 
@@ -45,5 +48,16 @@ export class MultipleChoiceQuestionEventComponent implements OnInit {
     document.getElementById(src)?.classList.toggle('activated-answer');
   }
 
-  public submitAnswer() {}
+  public submitAnswer() {
+    let answerCodes = [...this.selectedAnswers]
+      .filter(([k, v]) => v)
+      .map(([k, v]) => k);
+    let answers = this.questionNumeration
+      .filter((question) => answerCodes.includes(question[0]))
+      .map((question) => question[1]);
+    this.questionService.submitQuestion({
+      id: this.id,
+      answers: answers,
+    });
+  }
 }

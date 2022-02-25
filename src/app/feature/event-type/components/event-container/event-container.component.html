@@ -13,6 +13,7 @@
   ></app-video-event>
   <app-multiple-choice-question-event
     [payload]="eventPayload"
+    [id]="eventId"
     *ngIf="eventType === EventIdentifier.MultipleChoice"
   ></app-multiple-choice-question-event>
 </div>

@@ -26,7 +26,7 @@ export const config = {
               latitude: 46.801571,
               longitude: 15.540631,
             },
-            radius: 150000.5,
+            radius: 230000.5,
             direction: 'NORTH',
             description:
               'An diesem Punkt befindet sich die Station Hornbahn II',

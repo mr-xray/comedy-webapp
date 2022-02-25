@@ -22,6 +22,7 @@ export class JwtHttpInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const jwt = sessionStorage.getItem('jwt');
+    console.log('intercepted new ', req);
     let cloned = this.appendToken(req, jwt);
     return next.handle(cloned).pipe(
       catchError((error) => {
