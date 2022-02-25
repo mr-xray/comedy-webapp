@@ -30,7 +30,7 @@ export class JwtProviderService {
       this.setSession({
         username: uuid(),
         jwt: 'jwttoken',
-        role: 'user',
+        role: 'ADMIN',
         refresh: 'refreshtokenhahah',
         expiresIn: 20000,
       });
