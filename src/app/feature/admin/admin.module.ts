@@ -4,18 +4,15 @@ import { AdminMapComponent } from './components/admin-map/admin-map.component';
 import { MultipleChoiceQuestionResultsComponent } from './multiple-choice-question-results/multiple-choice-question-results.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { ManualTriggerControllerComponent } from './manual-trigger-controller/manual-trigger-controller.component';
-
-
+import { GpsModule } from '../gps/gps.module';
 
 @NgModule({
   declarations: [
+    AdminDashboardComponent,
     AdminMapComponent,
     MultipleChoiceQuestionResultsComponent,
-    AdminDashboardComponent,
-    ManualTriggerControllerComponent
+    ManualTriggerControllerComponent,
   ],
-  imports: [
-    CommonModule
-  ]
+  imports: [CommonModule, GpsModule],
 })
-export class AdminModule { }
+export class AdminModule {}

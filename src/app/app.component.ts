@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { SimpleOuterSubscriber } from 'rxjs/internal/innerSubscribe';
 import { ConfigService } from './data_access/backend-endpoint/service/config.service';
 import { WebsocketService } from './data_access/websocket/service/websocket.service';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

@@ -26,7 +26,9 @@ export class ConfigService extends BehaviorSubject<AppEvent[]> {
     private readonly jwt: JwtProviderService
   ) {
     super([]);
-    jwt.auth();
+    if (!sessionStorage.getItem('jwt')) {
+      jwt.auth();
+    }
     this.subscribe((events) => {
       //console.log('SUBJECT RECEIVED S', events);
       events.forEach((event) => {

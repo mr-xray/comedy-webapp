@@ -13,7 +13,7 @@ import {
   GpsTriggerPayload,
 } from '../../../../data_access/trigger-registration/trigger-type-controller';
 
-declare var ol: any;
+export declare var ol: any;
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',

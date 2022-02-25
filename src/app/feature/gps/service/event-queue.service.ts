@@ -7,6 +7,7 @@ import {
   TriggerEventBinding,
   TriggerType,
 } from 'src/app/data_access/trigger-registration/triggers';
+import { EventIdentifier } from 'src/app/data_access/websocket/util/events';
 import { AppEvent } from 'src/app/data_access/websocket/util/types';
 import { GpsTriggerPayload } from '../../../data_access/trigger-registration/trigger-type-controller';
 import { Queue } from '../util/queue';
@@ -149,5 +150,11 @@ export class EventQueueService extends Subject<AppEvent> {
         .get(TriggerType.GPS)
         ?.filter((t) => !(t.payload as GpsTriggerPayload).obscure) ?? []
     );
+  }
+
+  public get multipleChoiceQuestions(): AppEvent[] {
+    return [...this.events]
+      .map(([k, v]) => v)
+      .filter((v) => v.type === EventIdentifier.MultipleChoice);
   }
 }

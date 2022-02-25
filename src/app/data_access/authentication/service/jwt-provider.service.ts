@@ -63,10 +63,13 @@ export class JwtProviderService {
   }
 
   private setSession(authResult: JwtResultDto) {
+    console.log('setting');
     this.refreshToken = authResult.refresh;
     sessionStorage.setItem('jwt', authResult.jwt);
     sessionStorage.setItem('username', authResult.username);
     this._role = authResult.role as Role;
+    sessionStorage.setItem('role', authResult.role);
+    console.log(sessionStorage.getItem('role'));
     //sessionStorage.setItem('role', authResult.role);
     //console.log(moment().valueOf(), authResult.expiresIn);
     sessionStorage.setItem(

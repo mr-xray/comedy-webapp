@@ -5,6 +5,8 @@ import { ReplaySubject } from 'rxjs';
 import { EventQueueService } from 'src/app/feature/gps/service/event-queue.service';
 import { JwtProviderService } from '../../authentication/service/jwt-provider.service';
 import { ConfigService } from '../../backend-endpoint/service/config.service';
+import { QuestionService } from '../../backend-endpoint/service/question.service';
+import { QuestionResultDto } from '../../backend-endpoint/types';
 import { EventTriggerDto } from '../../trigger-registration/triggers';
 import { SocketCommunicationMessage } from '../util/socket-communication-message';
 import { EventDto } from '../util/types';
@@ -33,7 +35,8 @@ export class WebsocketService {
     private webSocket: Socket,
     private eventQueue: EventQueueService,
     private geolocation$: GeolocationService,
-    private jwt: JwtProviderService
+    private jwt: JwtProviderService,
+    private questions: QuestionService
   ) {
     this.jwt.authProcess.subscribe((res) => {
       if (res) {
@@ -87,6 +90,12 @@ export class WebsocketService {
         longitude: posi.coords.longitude,
       })
     );
+
+    webSocket
+      .fromEvent(SocketCommunicationMessage.Question)
+      .subscribe((response) =>
+        this.questions.handInQuestion(response as QuestionResultDto)
+      );
   }
 
   public dispatchManualTrigger(trigger: EventTriggerDto) {

@@ -10,6 +10,7 @@ import { JwtHttpInterceptor } from './data_access/authentication/interceptor/jwt
 import { ConfigService } from './data_access/backend-endpoint/service/config.service';
 import { WebsocketService } from './data_access/websocket/service/websocket.service';
 import { WebsocketModule } from './data_access/websocket/websocket.module';
+import { AdminModule } from './feature/admin/admin.module';
 import { EventTypeModule } from './feature/event-type/event-type.module';
 import { GpsModule } from './feature/gps/gps.module';
 import { LoginModule } from './feature/login/login.module';

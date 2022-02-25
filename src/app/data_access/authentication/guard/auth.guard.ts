@@ -26,7 +26,8 @@ export class AuthGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    const authenticated = this.jwtService.role;
+    const authenticated =
+      this.jwtService.role || sessionStorage.getItem('role');
     if (authenticated) {
       if (route.data.roles && route.data.roles.indexOf(authenticated) === -1) {
         this.router.navigate(['/']);
