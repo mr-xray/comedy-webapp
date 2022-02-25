@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   apiUrl: 'jakob-galaxy.at',
+  customerIconPath: './assets/images/marker_customer.svg',
 };
 
 /*

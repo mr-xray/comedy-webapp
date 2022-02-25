@@ -1,8 +1,11 @@
+import { trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { GpsTriggerPayload } from 'src/app/data_access/trigger-registration/trigger-type-controller';
 import { TriggerType } from 'src/app/data_access/trigger-registration/triggers';
+import { WebsocketService } from 'src/app/data_access/websocket/service/websocket.service';
 import { EventQueueService } from 'src/app/feature/gps/service/event-queue.service';
+import { environment } from 'src/environments/environment';
 
 export declare var ol: any;
 @Component({
@@ -11,38 +14,37 @@ export declare var ol: any;
   styleUrls: ['./admin-map.component.scss'],
 })
 export class AdminMapComponent implements OnInit {
-  //--------------------------------------------------------------------------------------------------
-  //--------------------------------------------------------------------------------------------------
-  //--------------------------------------------------------------------------------------------------
-
-  //------------------------------------------------------------------------------------
-  //------------------------------------------------------------------------------------
-  //------------------------------------------------------------------------------------
   constructor(
     private eventQueue: EventQueueService,
-    private geolocation$: GeolocationService
+    private websocket: WebsocketService
   ) {
     this.markerMap = new Map<string, any>();
     this.eventQueue = eventQueue;
     //this.eventQueue.submitEvent(this.event);
     this.eventQueue.subscribe((ev) => {
-      console.log('Trigger ');
+      //console.log('Trigger ');
       ev.triggers.forEach((t) => {
         if (t.type === TriggerType.GPS) {
         }
       });
     });
-    console.log(this.eventQueue);
+    //console.log(this.eventQueue);
     //this.gpsPoints = this.gpsPoints.concat(extraEvents.getEvents);
     //this.gpsPoints = this.gpsPoints.concat(eventQueue.getSequence);
-    this.geolocation$.subscribe((position) => {
-      //this.centerView(position);
-    });
   }
 
   private map: any;
   private mapView: any;
   private markerMap: Map<string, any>;
+  private featureId: number = 1;
+  public userLocations: Map<
+    string,
+    {
+      featureId: number;
+      role: string;
+      location: { latitude: number; longitude: number };
+    }
+  > = new Map();
 
   reloadMap() {
     Array.from(this.markerMap.values()).map((m) => null);
@@ -51,14 +53,40 @@ export class AdminMapComponent implements OnInit {
 
   ngOnInit() {
     this.createMap();
+    this.mapView.setCenter(ol.proj.fromLonLat([15.539918, 46.800877]));
     this.eventQueue.unobscureGpsTriggers.forEach((t) =>
       this.createMarkerForGps(
         (t.payload as GpsTriggerPayload).coordinates.longitude,
         (t.payload as GpsTriggerPayload).coordinates.latitude,
-        this.createLayer((t.payload as GpsTriggerPayload).markerIcon)
+        this.createLayer((t.payload as GpsTriggerPayload).markerIcon),
+        this.featureId++
       )
     );
-    this.updateLocation();
+    let layer = this.createLayer(environment.customerIconPath);
+    this.websocket.userLocations.subscribe((location) => {
+      let featureId = this.userLocations.get(location.username)?.featureId;
+      if (!featureId) {
+        featureId = this.featureId++;
+      }
+      this.userLocations.set(location.username, {
+        featureId: featureId,
+        role: location.role,
+        location: {
+          latitude: location.location.latitude,
+          longitude: location.location.longitude,
+        },
+      });
+      if (this.featureId !== featureId + 1) {
+        this.removeMarker(featureId, layer);
+      }
+      this.createMarkerForGps(
+        location.location.longitude,
+        location.location.latitude,
+        layer,
+        this.featureId
+      );
+    });
+    this.websocket.initLocationStream();
   }
 
   createMap() {
@@ -81,24 +109,29 @@ export class AdminMapComponent implements OnInit {
     this.mapView.setZoom(18);
   }
 
-  updateLocation() {
-    this.geolocation$.subscribe((locationData) =>
-      this.centerView(locationData)
-    );
-  }
-
   centerView(location: GeolocationPosition) {
     this.mapView.setCenter(
       ol.proj.fromLonLat([location.coords.longitude, location.coords.latitude])
     );
   }
 
-  private createMarkerForGps(lon: number, lat: number, layer: any): any {
+  private createMarkerForGps(
+    lon: number,
+    lat: number,
+    layer: any,
+    featureId: number
+  ): any {
     let marker = new ol.Feature(
       new ol.geom.Point(ol.proj.fromLonLat([lon, lat]))
     );
+    marker.setId(featureId);
     layer.getSource().addFeature(marker);
     return marker;
+  }
+
+  private removeMarker(id: number, layer: any) {
+    let feature = layer.getSource().getFeatureById(id);
+    layer.getSource().removeFeature(feature);
   }
 
   private createLayer(url: string): any {

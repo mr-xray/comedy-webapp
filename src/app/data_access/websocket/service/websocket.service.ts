@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { Socket, SocketIoConfig } from 'ngx-socket-io';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject, Subject } from 'rxjs';
 import { EventQueueService } from 'src/app/feature/gps/service/event-queue.service';
 import { JwtProviderService } from '../../authentication/service/jwt-provider.service';
 import { ConfigService } from '../../backend-endpoint/service/config.service';
@@ -19,11 +19,11 @@ export class WebsocketService {
     url: 'https://jakob-galaxy.at:3000',
     options: {},
   };
-  public userLocations: ReplaySubject<{
+  public userLocations: Subject<{
     username: string;
     role: string;
     location: { longitude: number; latitude: number };
-  }> = new ReplaySubject(1);
+  }> = new Subject();
 
   private authorizationSet: boolean = false;
   private jwtExpiryBuffer: {
@@ -103,6 +103,10 @@ export class WebsocketService {
 
   public dispatchManualTrigger(trigger: number) {
     this.dispatchMessage(SocketCommunicationMessage.ManualTrigger, trigger);
+  }
+
+  public initLocationStream() {
+    this.dispatchMessage(SocketCommunicationMessage.Location, 'GETALL');
   }
 
   private dispatchMessage(channel: SocketCommunicationMessage, payload: any) {
