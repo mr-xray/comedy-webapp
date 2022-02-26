@@ -50,20 +50,21 @@ export class JwtProviderService {
   }
 
   public renewToken() {
-    console.log('[JwtProviderService] Forging token renewal request');
+    console.log(
+      '[JwtProviderService] Forging token renewal request: ',
+      this.refreshToken
+    );
+    this.refreshToken =
+      this.refreshToken ?? sessionStorage.getItem('refresh') ?? undefined;
     let obs = this.forgeAuthRequest(JwtProviderService.refreshUrl, {
       refresh: this.refreshToken,
     });
-    obs.subscribe((jwt) => this.setSession);
+    obs.subscribe((jwt) => this.setSession(jwt as JwtResultDto));
     return obs;
   }
 
   private forgeAuthRequest(url: string, authBody: any) {
-    return this.http.post(
-      JwtProviderService.authUrl,
-      authBody,
-      JwtProviderService.authHttpHeader
-    );
+    return this.http.post(url, authBody, JwtProviderService.authHttpHeader);
   }
 
   private setSession(authResult: JwtResultDto) {
@@ -72,11 +73,15 @@ export class JwtProviderService {
       authResult
     );
     this.refreshToken = authResult.refreshToken;
+    sessionStorage.setItem('refresh', this.refreshToken);
     sessionStorage.setItem('jwt', authResult.accessToken);
     sessionStorage.setItem('username', authResult.username);
     this._role = authResult.role as Role;
     sessionStorage.setItem('role', authResult.role);
-    console.log(sessionStorage.getItem('role'));
+    console.log(
+      '[JwtProviderService] Assessed role: ',
+      sessionStorage.getItem('role')
+    );
     //sessionStorage.setItem('role', authResult.role);
     //console.log(moment().valueOf(), authResult.expiresIn);
     let expiry = parseInt((authResult.expireIn as string).replace('ms', ''));

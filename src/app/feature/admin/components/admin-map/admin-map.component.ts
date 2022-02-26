@@ -54,6 +54,7 @@ export class AdminMapComponent implements OnInit {
   ngOnInit() {
     this.createMap();
     this.mapView.setCenter(ol.proj.fromLonLat([15.539918, 46.800877]));
+
     this.eventQueue.unobscureGpsTriggers.forEach((t) =>
       this.createMarkerForGps(
         (t.payload as GpsTriggerPayload).coordinates.longitude,
@@ -64,6 +65,9 @@ export class AdminMapComponent implements OnInit {
     );
     let layer = this.createLayer(environment.customerIconPath);
     this.websocket.userLocations.subscribe((location) => {
+      console.log(
+        '[AdminMapComponent] Registered new movement from ' + location.username
+      );
       let toRemove: boolean = !!this.userLocations.get(location.username);
       let featureId =
         this.userLocations.get(location.username)?.featureId ??

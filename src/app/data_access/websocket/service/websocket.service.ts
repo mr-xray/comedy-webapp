@@ -66,7 +66,8 @@ export class WebsocketService {
     webSocket
       .fromEvent(SocketCommunicationMessage.ManualTrigger)
       .subscribe((response) => {
-        eventQueue.triggerManualTrigger(response as number);
+        console.log('[WebsocketService] Received incoming manual trigger');
+        eventQueue.triggerManualTrigger(response as { id: number });
       });
 
     webSocket
@@ -131,15 +132,20 @@ export class WebsocketService {
   }
 
   public dispatchManualTrigger(trigger: number) {
-    this.dispatchMessage(SocketCommunicationMessage.ManualTrigger, trigger);
+    this.dispatchMessage(SocketCommunicationMessage.ManualTrigger, {
+      id: trigger,
+    });
   }
 
   public initLocationStream() {
-    this.dispatchMessage(SocketCommunicationMessage.Location, 'GETALL');
+    console.log('[WebsocketService] Requesting all locations');
+    this.dispatchMessage(SocketCommunicationMessage.Location, {
+      command: 'GETALL',
+    });
   }
 
   private dispatchMessage(channel: SocketCommunicationMessage, payload: any) {
-    console.log('[WebsocketService] Attempting to send on ' + channel);
+    //console.log('[WebsocketService] Attempting to send on ' + channel);
     if (!this.authorizationSet) {
       console.log('[WebsocketService] Unauthorized, buffering');
       this.jwtExpiryBuffer.push({ channel, payload });
@@ -153,9 +159,10 @@ export class WebsocketService {
     ) {
       console.log('[WebsocketService] Token is about to expire');
       this.authorizationSet = false;
-      this.jwt
-        .renewToken()
-        .subscribe((res) => this.dispatchMessage(channel, payload));
+      this.jwt.renewToken().subscribe((res) => {
+        this.authorizationSet = true;
+        this.dispatchMessage(channel, payload);
+      });
       return;
     }
     let jwt = sessionStorage.getItem('jwt');
@@ -169,7 +176,7 @@ export class WebsocketService {
         });
       }
     }
-    console.log('[WebsocketService] Emmitting on ', channel);
+    //console.log('[WebsocketService] Emmitting on ', channel);
     this.webSocket.emit(channel, {
       accessToken: jwt,
       payload: payload,

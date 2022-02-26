@@ -19,6 +19,7 @@ export class AdminLoginComponent implements OnInit {
     sessionStorage.removeItem('role');
     sessionStorage.removeItem('expires_at');
     sessionStorage.removeItem('username');
+    console.log('[AdminLogin] Setting up form');
   }
   public authFailure: boolean = false;
   public loginForm = this.formBuilder.group({
@@ -29,16 +30,22 @@ export class AdminLoginComponent implements OnInit {
   ngOnInit(): void {}
 
   public authenticate() {
+    console.log('[AdminLogin] Attempting to login');
     this.jwtProvider.auth(this.loginForm.value);
     this.jwtProvider.authProcess.subscribe((event) => {
       if (event) {
         if (this.jwtProvider.role != Role.Admin) {
           this.authFailure = true;
+          console.log('[AdminLogin] Admin login failed');
         } else {
+          console.log(
+            '[AdminLogin] Login successful, redirecting to admin dashboard'
+          );
           this.router.navigate(['/admin']);
         }
       } else {
         this.authFailure = true;
+        console.log('[AdminLogin] Admin login failed');
       }
     });
     //let username = document.getElementById('username')?.ariaValueMax;

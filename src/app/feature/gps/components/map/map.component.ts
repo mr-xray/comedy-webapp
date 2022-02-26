@@ -48,7 +48,8 @@ export class MapComponent implements OnInit {
   reloadMap() {
     console.log('[MapComponent] Clearing map');
     Array.from(this.markerMap.values()).map((m) => null);
-    this.createMap();
+    this.markerMap = new Map();
+    //this.createMap();
   }
 
   ngOnInit() {
@@ -103,18 +104,20 @@ export class MapComponent implements OnInit {
   }
 
   private createMarkerForGps(lon: number, lat: number, layer: any): any {
-    console.log('[MapComponent] Creating marker');
+    /*console.log(
+      '[MapComponent] Creating marker at lon:' + lon + ', lat:' + lat
+    );*/
     let marker = new ol.Feature(
       new ol.geom.Point(ol.proj.fromLonLat([lon, lat]))
     );
+    //console.log('[MapComponent] Marker created: ', marker);
     layer.getSource().addFeature(marker);
     return marker;
   }
 
   private createLayer(url: string): any {
-    console.log('[MapComponent] Creating layer');
     if (!this.markerMap.get(url)) {
-      console.log('[MapComponent] Creating marker with url: ', url);
+      //console.log('[MapComponent] Creating layer with url: ', url);
       let layer: any = new ol.layer.Vector({
         source: new ol.source.Vector(),
         style: new ol.style.Style({
@@ -127,6 +130,7 @@ export class MapComponent implements OnInit {
         }),
       });
       this.markerMap.set(url, layer);
+      //console.log('[MapComponent] Adding layer ', layer);
       this.map.addLayer(layer);
     }
     return this.markerMap.get(url);

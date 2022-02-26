@@ -1,6 +1,6 @@
 export enum SocketCommunicationMessage {
   Location = 'LOCATION',
-  ManualTrigger = 'MANUAL-TRIGGER',
+  ManualTrigger = 'MANUAL_TRIGGER',
   TokenExpired = 'AUTH',
   Question = 'QUESTION',
 }

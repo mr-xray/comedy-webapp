@@ -18,6 +18,7 @@ export class QuestionService extends Subject<QuestionResultDto[]> {
   }
 
   public requestResults() {
+    console.log('[QuestionService] Requesting results');
     this.http
       .get(QuestionService.questionUrl)
       .subscribe((res) => this.handleAllQuestions(res as QuestionResultDto[]));
@@ -61,6 +62,7 @@ export class QuestionService extends Subject<QuestionResultDto[]> {
 
   private handleAllQuestions(questions: QuestionResultDto[]) {
     this.questionStats = questions;
+    console.log('[QuestionService] Questions received', this.questionStats);
     this.next(this.questionStats);
   }
 }

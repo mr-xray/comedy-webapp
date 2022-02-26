@@ -17,9 +17,14 @@ import { EventQueueService } from '../../gps/service/event-queue.service';
 })
 export class MultipleChoiceQuestionResultsComponent implements OnInit {
   constructor(private questionService: QuestionService) {
+    console.log(
+      '[MultipleChoiceQuestionResultComponent] Requesting question results'
+    );
     this.questionService.subscribe((results) => {
       this.questions = results;
+      console.log('[MultipleChoiceQuestionResultComponent] Results received');
     });
+    this.questionService.requestResults();
   }
   public questions: QuestionResultDto[] = [];
 
