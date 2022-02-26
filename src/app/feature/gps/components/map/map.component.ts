@@ -12,6 +12,7 @@ import {
   ManualTriggerPayload,
   GpsTriggerPayload,
 } from '../../../../data_access/trigger-registration/trigger-type-controller';
+import { environment } from 'src/environments/environment';
 
 export declare var ol: any;
 @Component({
@@ -26,7 +27,6 @@ export class MapComponent implements OnInit {
   ) {
     this.markerMap = new Map<string, any>();
     this.eventQueue = eventQueue;
-    //this.eventQueue.submitEvent(this.event);
     this.eventQueue.subscribe((ev) => {
       console.log('[MapComponent] New Event to draw');
       ev.triggers.forEach((t) => {
@@ -34,16 +34,11 @@ export class MapComponent implements OnInit {
         }
       });
     });
-    //this.gpsPoints = this.gpsPoints.concat(extraEvents.getEvents);
-    //this.gpsPoints = this.gpsPoints.concat(eventQueue.getSequence);
-    this.geolocation$.subscribe((position) => {
-      //this.centerView(position);
-    });
   }
 
   private map: any;
   private mapView: any;
-  private markerMap: Map<string, any>;
+  private markerMap: Map<string, any> = new Map();
 
   reloadMap() {
     console.log('[MapComponent] Clearing map');
@@ -54,18 +49,15 @@ export class MapComponent implements OnInit {
 
   ngOnInit() {
     this.createMap();
-    this.eventQueue.submission.subscribe((event) => {
-      console.log('[MapComponent] New event to draw received');
-      this.reloadMap();
-      console.log('[MapComponent] Requesting unobsucre GPS-Triggers');
-      this.eventQueue.unobscureGpsTriggers.forEach((t) =>
-        this.createMarkerForGps(
-          (t.payload as GpsTriggerPayload).coordinates.longitude,
-          (t.payload as GpsTriggerPayload).coordinates.latitude,
-          this.createLayer((t.payload as GpsTriggerPayload).markerIcon)
-        )
+    this.eventQueue.gpsSubmission.subscribe((tr) => {
+      //console.log('[MapComponent] New submission');
+      this.createMarkerForGps(
+        (tr.payload as GpsTriggerPayload).coordinates.longitude,
+        (tr.payload as GpsTriggerPayload).coordinates.latitude,
+        this.createLayer((tr.payload as GpsTriggerPayload).markerIcon)
       );
     });
+    this.createLayer(environment.selfPositionIconPath);
     this.updateLocation();
   }
 
@@ -91,25 +83,39 @@ export class MapComponent implements OnInit {
   }
 
   updateLocation() {
-    this.geolocation$.subscribe((locationData) =>
-      this.centerView(locationData)
-    );
+    let lat = 46,
+      lon = 15;
+    this.geolocation$.subscribe((locationData) => {
+      this.centerView(locationData);
+      this.updateMarker(
+        locationData.coords.latitude,
+        locationData.coords.longitude,
+        1,
+        this.markerMap.get(environment.selfPositionIconPath)
+      );
+    });
   }
 
   centerView(location: GeolocationPosition) {
-    console.log('[MapComponent] Centering view');
+    //console.log('[MapComponent] Centering view');
     this.mapView.setCenter(
       ol.proj.fromLonLat([location.coords.longitude, location.coords.latitude])
     );
   }
 
-  private createMarkerForGps(lon: number, lat: number, layer: any): any {
+  private createMarkerForGps(
+    lon: number,
+    lat: number,
+    layer: any,
+    id?: number
+  ): any {
     /*console.log(
       '[MapComponent] Creating marker at lon:' + lon + ', lat:' + lat
     );*/
     let marker = new ol.Feature(
       new ol.geom.Point(ol.proj.fromLonLat([lon, lat]))
     );
+    marker.setId(id);
     //console.log('[MapComponent] Marker created: ', marker);
     layer.getSource().addFeature(marker);
     return marker;
@@ -134,5 +140,21 @@ export class MapComponent implements OnInit {
       this.map.addLayer(layer);
     }
     return this.markerMap.get(url);
+  }
+
+  private updateMarker(lat: number, lon: number, id: number, layer: any) {
+    let feature = layer.getSource().getFeatureById(id);
+    if (!feature) {
+      this.createMarkerForGps(lon, lat, layer, id);
+    } else {
+      let coord = ol.proj.fromLonLat([lon, lat]);
+      feature.getGeometry().setCoordinates(coord);
+    }
+  }
+
+  private removeMarker(id: number, layer: any) {
+    let feature = layer.getSource().getFeatureById(id);
+    //console.log(feature);
+    layer.getSource().removeFeature(feature);
   }
 }

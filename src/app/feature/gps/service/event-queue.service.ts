@@ -19,13 +19,13 @@ import { UpdatingPrioritySet } from '../util/updating-priority-set';
 export class EventQueueService extends Subject<AppEvent> {
   private poppingLoops = 0;
   private interruptingMap: Map<number, boolean> = new Map<number, boolean>();
-  public submission: Subject<AppEvent> = new Subject();
+  public gpsSubmission: Subject<TriggerEventBinding> = new Subject();
   public constructor(private readonly geolocation$: GeolocationService) {
     super();
     this.triggers = new Map<TriggerType, TriggerEventBinding[]>();
     this.events = new Map<number, AppEvent>();
     geolocation$.subscribe((position) => {
-      //console.log('[EventQueueService] New position arrived, checking...');
+      console.log('[EventQueueService] New position arrived, checking...');
       for (let triggerBinding of this.triggers.get(TriggerType.GPS) as any) {
         if (
           triggerBinding &&
@@ -69,12 +69,17 @@ export class EventQueueService extends Subject<AppEvent> {
         ...trigger,
       };
       this.triggers.get(trigger.type)?.push(triggerEventBinding);
+      if (
+        trigger.type === TriggerType.GPS &&
+        (trigger.payload as GpsTriggerPayload).obscure == false
+      ) {
+        this.gpsSubmission.next(triggerEventBinding);
+      }
       this.events.set(event.id, event);
       //this.triggers.pushEvent(event);
     }
     console.log('[EventQueueService] Triggers as of now: ', this.triggers);
     console.log('[EventQueueService] Notifying subscribers');
-    this.submission.next(event);
     return this;
   }
 

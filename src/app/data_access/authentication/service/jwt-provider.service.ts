@@ -52,7 +52,7 @@ export class JwtProviderService {
   public renewToken() {
     console.log(
       '[JwtProviderService] Forging token renewal request: ',
-      this.refreshToken
+      this.refreshToken ?? sessionStorage.getItem('refresh') ?? undefined
     );
     this.refreshToken =
       this.refreshToken ?? sessionStorage.getItem('refresh') ?? undefined;

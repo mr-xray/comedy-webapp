@@ -25,7 +25,7 @@ export class JwtHttpInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const jwt = sessionStorage.getItem('jwt');
     console.log('[HttpInterceptor] Intercepted new ', req);
-    console.log('[HttpInterceptor] Appending CORS * ');
+    //console.log('[HttpInterceptor] Appending CORS * ');
     const cors = req.clone({
       headers: req.headers.set('Access-Control-Allow-Origin', '*'),
     });
@@ -43,7 +43,7 @@ export class JwtHttpInterceptor implements HttpInterceptor {
 
   private appendToken(request: HttpRequest<any>, token: string | null) {
     if (token) {
-      console.log('[HttpInterceptor] Appending JWT');
+      //console.log('[HttpInterceptor] Appending JWT');
       const cloned = request.clone({
         headers: request.headers.set('Authorization', 'Bearer ' + token),
       });
