@@ -72,6 +72,7 @@ export class WebsocketService {
     webSocket
       .fromEvent(SocketCommunicationMessage.TokenExpired)
       .subscribe((response) => {
+        console.log('[WebsocketService] Unauthorized received');
         this.authorizationSet = false;
         jwt.renewToken();
       });
@@ -138,8 +139,9 @@ export class WebsocketService {
   }
 
   private dispatchMessage(channel: SocketCommunicationMessage, payload: any) {
+    console.log('[WebsocketService] Attempting to send on ' + channel);
     if (!this.authorizationSet) {
-      console.log('not authroized, buffering');
+      console.log('[WebsocketService] Unauthorized, buffering');
       this.jwtExpiryBuffer.push({ channel, payload });
       return;
     }
@@ -149,21 +151,28 @@ export class WebsocketService {
       !this.jwt.getEarlyExpiryDate() ||
       (this.jwt.getEarlyExpiryDate() as Date) < new Date()
     ) {
-      console.log('Token is about to expire');
+      console.log('[WebsocketService] Token is about to expire');
       this.authorizationSet = false;
       this.jwt
         .renewToken()
         .subscribe((res) => this.dispatchMessage(channel, payload));
       return;
     }
+    let jwt = sessionStorage.getItem('jwt');
     while (this.jwtExpiryBuffer.length !== 0) {
-      console.log('Working off buffered');
+      console.log('[WebsocketService] Working off buffered');
       let emitted = this.jwtExpiryBuffer.shift();
       if (emitted) {
-        this.webSocket.emit(emitted.channel, emitted.payload);
+        this.webSocket.emit(emitted.channel, {
+          accessToken: jwt,
+          payload: emitted.payload,
+        });
       }
     }
-    console.log('emmitting on ', channel);
-    this.webSocket.emit(channel, payload);
+    console.log('[WebsocketService] Emmitting on ', channel);
+    this.webSocket.emit(channel, {
+      accessToken: jwt,
+      payload: payload,
+    });
   }
 }

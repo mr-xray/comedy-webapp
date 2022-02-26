@@ -114,6 +114,7 @@ export class MapComponent implements OnInit {
   private createLayer(url: string): any {
     console.log('[MapComponent] Creating layer');
     if (!this.markerMap.get(url)) {
+      console.log('[MapComponent] Creating marker with url: ', url);
       let layer: any = new ol.layer.Vector({
         source: new ol.source.Vector(),
         style: new ol.style.Style({

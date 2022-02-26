@@ -153,7 +153,7 @@ export const config = {
               latitude: 46.875571,
               longitude: 15.540631,
             },
-            radius: 230000.5,
+            radius: 2300.5,
             direction: 'NORTH',
             description:
               'An diesem Punkt befindet sich die Station Hornbahn II',
@@ -211,7 +211,7 @@ export const config = {
           priority: 64,
           payload: {
             obscure: false,
-            sequence: 500,
+            sequence: 0,
             markerIcon:
               'https://cdn.discordapp.com/attachments/545999117214810142/944210492233248829/unknown.png',
             passedMarkerIcon:
@@ -220,7 +220,7 @@ export const config = {
               latitude: 45.481571,
               longitude: 15.540631,
             },
-            radius: 2000000.5,
+            radius: 2000.5,
             direction: 'NORTH',
             description:
               'An diesem Punkt befindet sich die Station Hornbahn III',
