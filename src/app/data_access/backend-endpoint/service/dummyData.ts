@@ -130,6 +130,134 @@ export const config = {
         ],
       },
     },
+    {
+      id: 3,
+      name: 'Station Hornbahn IV',
+      description:
+        'Die Station Hornbahn 4 ist einer von 5 Stops auf dem Lift auf der Bichl Alm',
+      type: 'VIDEO',
+      //type: 'IMAGE',
+      triggers: [
+        {
+          id: 1,
+          priority: 64,
+          type: 'GPS',
+          payload: {
+            obscure: false,
+            sequence: 3,
+            markerIcon:
+              'https://cdn.discordapp.com/attachments/545999117214810142/944210492958838794/unknown.png',
+            passedMarkerIcon:
+              'https://cdn.discordapp.com/attachments/545999117214810142/944210491939627038/unknown.png',
+            coordinates: {
+              latitude: 46.875571,
+              longitude: 15.540631,
+            },
+            radius: 230000.5,
+            direction: 'NORTH',
+            description:
+              'An diesem Punkt befindet sich die Station Hornbahn II',
+          },
+        },
+        {
+          id: 2,
+          type: 'GPS',
+          priority: 64,
+          payload: {
+            obscure: true,
+            sequence: 1000,
+            markerIcon: 'not.applicable/because/trigger/is.obscure',
+            passedMarkerIcon: 'also.not.applicable',
+            coordinates: {
+              latitude: 45.851571,
+              longitude: 15.540631,
+            },
+            radius: 25.5,
+            direction: 'SOUTH',
+            description:
+              'An diesem Punkt befindet sich nicht die Station Hornbahn II ok',
+          },
+        },
+        {
+          id: 3,
+          type: 'MANUAL',
+          priority: 128,
+          payload: {
+            minDuration: 5000,
+          },
+        },
+      ],
+      payload: {
+        url: 'https://www.youtube.com/embed/-jhBDFaRFVc',
+        //url: 'https://cdn.discordapp.com/attachments/545999117214810142/945258236653752400/depositphotos_47349533-stock-photo-labrador-retriever.png',
+        //width: 960,
+        //height: 540,
+        width: '100%',
+        height: '100%',
+        borderRadius: '1rem',
+        //length: 521000,
+      },
+    },
+    {
+      id: 4,
+      name: 'Station Hornbahn V',
+      description:
+        'Die Station Hornbahn 5 ist einer von 5 Stops und die Mittelstation auf dem Lift auf der Bichl Alm',
+      type: 'MULTIPLE_CHOICE',
+      triggers: [
+        {
+          id: 4,
+          type: 'GPS',
+          priority: 64,
+          payload: {
+            obscure: false,
+            sequence: 500,
+            markerIcon:
+              'https://cdn.discordapp.com/attachments/545999117214810142/944210492233248829/unknown.png',
+            passedMarkerIcon:
+              'https://cdn.discordapp.com/attachments/545999117214810142/944210492535234580/unknown.png',
+            coordinates: {
+              latitude: 45.481571,
+              longitude: 15.540631,
+            },
+            radius: 2000000.5,
+            direction: 'NORTH',
+            description:
+              'An diesem Punkt befindet sich die Station Hornbahn III',
+          },
+        },
+        {
+          id: 5,
+          type: 'MANUAL',
+          priority: 128,
+          payload: {
+            minDuration: 10000,
+          },
+        },
+      ],
+      payload: {
+        question:
+          'Welche Abfahrten befinden sich im Kitzbühler Schigebiet? Multiple CHoice 2',
+        answers: [
+          {
+            answer: 'Achenrainbahn2',
+            correct: false,
+          },
+          {
+            answer: 'Fleck2',
+            correct: true,
+          },
+          {
+            answer: 'Hahnenkamm2',
+            correct: true,
+          },
+          {
+            answer: 'Edelweißbahn2',
+            correct: false,
+          },
+        ],
+      },
+    },
   ],
 };
 /*

@@ -19,6 +19,7 @@ import { UpdatingPrioritySet } from '../util/updating-priority-set';
 export class EventQueueService extends Subject<AppEvent> {
   private poppingLoops = 0;
   private interruptingMap: Map<number, boolean> = new Map<number, boolean>();
+  public submission: Subject<AppEvent> = new Subject();
   public constructor(private readonly geolocation$: GeolocationService) {
     super();
     this.triggers = new Map<TriggerType, TriggerEventBinding[]>();
@@ -45,9 +46,6 @@ export class EventQueueService extends Subject<AppEvent> {
     Object.entries(TriggerType).forEach((triggerType) =>
       this.triggers.set(triggerType[1], [])
     );
-    geolocation$.subscribe((position) => {
-      //console.log('sos');
-    });
   }
   private events: Map<number, AppEvent>;
   /*public get getSequence(): AppEvent[] {
@@ -75,6 +73,8 @@ export class EventQueueService extends Subject<AppEvent> {
       //this.triggers.pushEvent(event);
     }
     console.log('[EventQueueService] Triggers as of now: ', this.triggers);
+    console.log('[EventQueueService] Notifying subscribers');
+    this.submission.next(event);
     return this;
   }
 
@@ -152,6 +152,7 @@ export class EventQueueService extends Subject<AppEvent> {
   }
 
   public get unobscureGpsTriggers(): TriggerEventBinding[] {
+    console.log('[EventQueueService] Unobscure GPS-Triggers requested');
     return (
       this.triggers
         .get(TriggerType.GPS)

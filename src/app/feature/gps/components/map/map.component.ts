@@ -20,13 +20,6 @@ export declare var ol: any;
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit {
-  //--------------------------------------------------------------------------------------------------
-  //--------------------------------------------------------------------------------------------------
-  //--------------------------------------------------------------------------------------------------
-
-  //------------------------------------------------------------------------------------
-  //------------------------------------------------------------------------------------
-  //------------------------------------------------------------------------------------
   constructor(
     private eventQueue: EventQueueService,
     private geolocation$: GeolocationService
@@ -53,24 +46,31 @@ export class MapComponent implements OnInit {
   private markerMap: Map<string, any>;
 
   reloadMap() {
+    console.log('[MapComponent] Clearing map');
     Array.from(this.markerMap.values()).map((m) => null);
     this.createMap();
   }
 
   ngOnInit() {
     this.createMap();
-    this.eventQueue.unobscureGpsTriggers.forEach((t) =>
-      this.createMarkerForGps(
-        (t.payload as GpsTriggerPayload).coordinates.longitude,
-        (t.payload as GpsTriggerPayload).coordinates.latitude,
-        this.createLayer((t.payload as GpsTriggerPayload).markerIcon)
-      )
-    );
+    this.eventQueue.submission.subscribe((event) => {
+      console.log('[MapComponent] New event to draw received');
+      this.reloadMap();
+      console.log('[MapComponent] Requesting unobsucre GPS-Triggers');
+      this.eventQueue.unobscureGpsTriggers.forEach((t) =>
+        this.createMarkerForGps(
+          (t.payload as GpsTriggerPayload).coordinates.longitude,
+          (t.payload as GpsTriggerPayload).coordinates.latitude,
+          this.createLayer((t.payload as GpsTriggerPayload).markerIcon)
+        )
+      );
+    });
     this.updateLocation();
   }
 
   createMap() {
     // create Map
+    console.log('[MapComponent] Setting up map');
     this.map = new ol.Map({
       target: 'map',
       layers: [
@@ -96,12 +96,14 @@ export class MapComponent implements OnInit {
   }
 
   centerView(location: GeolocationPosition) {
+    console.log('[MapComponent] Centering view');
     this.mapView.setCenter(
       ol.proj.fromLonLat([location.coords.longitude, location.coords.latitude])
     );
   }
 
   private createMarkerForGps(lon: number, lat: number, layer: any): any {
+    console.log('[MapComponent] Creating marker');
     let marker = new ol.Feature(
       new ol.geom.Point(ol.proj.fromLonLat([lon, lat]))
     );
@@ -110,6 +112,7 @@ export class MapComponent implements OnInit {
   }
 
   private createLayer(url: string): any {
+    console.log('[MapComponent] Creating layer');
     if (!this.markerMap.get(url)) {
       let layer: any = new ol.layer.Vector({
         source: new ol.source.Vector(),
