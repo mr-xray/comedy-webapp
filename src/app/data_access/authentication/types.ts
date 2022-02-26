@@ -1,7 +1,7 @@
 export interface JwtResultDto {
   username: string;
-  jwt: string;
+  accessToken: string;
   role: string;
-  refresh: string;
-  expiresIn: number; // in milliseconds
+  refreshToken: string;
+  expireIn: string; // in milliseconds
 }

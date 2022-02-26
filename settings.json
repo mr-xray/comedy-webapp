@@ -25,7 +25,7 @@
           "payload": {
             "obscure": false,
             "sequence": 1,
-            "markerIcon": "jakob-galaxy.at/markers/questionmarkIcon.svg",
+            "markerIcon": "jakob-galaxy.at:3000/markers/questionmarkIcon.svg",
             "coordinates": {
               "latitude": 46.801571,
               "longitude": 15.540631
@@ -81,7 +81,7 @@
           "payload": {
             "obscure": false,
             "sequence": 2,
-            "markerIcon": "jakob-galaxy.at/markers/chechmarkIcon.svg",
+            "markerIcon": "jakob-galaxy.at:3000/markers/chechmarkIcon.svg",
             "coordinates": {
               "latitude": 46.801571,
               "longitude": 15.540631

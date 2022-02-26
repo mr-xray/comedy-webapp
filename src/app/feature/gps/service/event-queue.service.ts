@@ -24,6 +24,7 @@ export class EventQueueService extends Subject<AppEvent> {
     this.triggers = new Map<TriggerType, TriggerEventBinding[]>();
     this.events = new Map<number, AppEvent>();
     geolocation$.subscribe((position) => {
+      console.log('[EventQueueService] New position arrived, checking...');
       for (let triggerBinding of this.triggers.get(TriggerType.GPS) as any) {
         if (
           triggerBinding &&
@@ -32,6 +33,10 @@ export class EventQueueService extends Subject<AppEvent> {
           if (
             (triggerBinding as TriggerEventBinding).payload.trigger(position)
           ) {
+            console.log(
+              '[EventQueueService] Found match. Executing trigger',
+              triggerBinding
+            );
             this.doUpdateCheck(triggerBinding);
           }
         }
@@ -58,6 +63,7 @@ export class EventQueueService extends Subject<AppEvent> {
 
   public submitEvent(event: AppEvent): Subject<AppEvent> {
     //console.log('Submission received: ', event);
+    console.log('[EventQueueService] Event submitted');
     const triggers: EventTriggerDto[] = event.triggers;
     for (let trigger of triggers) {
       const triggerEventBinding: TriggerEventBinding = {
@@ -68,6 +74,7 @@ export class EventQueueService extends Subject<AppEvent> {
       this.events.set(event.id, event);
       //this.triggers.pushEvent(event);
     }
+    console.log('[EventQueueService] Triggers as of now: ', this.triggers);
     return this;
   }
 

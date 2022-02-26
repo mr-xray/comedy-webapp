@@ -35,13 +35,12 @@ export class MapComponent implements OnInit {
     this.eventQueue = eventQueue;
     //this.eventQueue.submitEvent(this.event);
     this.eventQueue.subscribe((ev) => {
-      console.log('Trigger ');
+      console.log('[MapComponent] New Event to draw');
       ev.triggers.forEach((t) => {
         if (t.type === TriggerType.GPS) {
         }
       });
     });
-    console.log(this.eventQueue);
     //this.gpsPoints = this.gpsPoints.concat(extraEvents.getEvents);
     //this.gpsPoints = this.gpsPoints.concat(eventQueue.getSequence);
     this.geolocation$.subscribe((position) => {

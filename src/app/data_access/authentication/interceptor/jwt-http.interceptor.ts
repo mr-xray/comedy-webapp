@@ -13,6 +13,7 @@ import { catchError, filter, switchMap, take } from 'rxjs/operators';
 @Injectable()
 export class JwtHttpInterceptor implements HttpInterceptor {
   private isRefreshing: boolean = false;
+  private isGettingFirst: boolean = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(
     null
   );
@@ -22,8 +23,12 @@ export class JwtHttpInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const jwt = sessionStorage.getItem('jwt');
-    console.log('intercepted new ', req);
-    let cloned = this.appendToken(req, jwt);
+    console.log('[HttpInterceptor] intercepted new ', req);
+    console.log('[HttpInterceptor] Appending CORS * ');
+    const cors = req.clone({
+      headers: req.headers.set('Access-Control-Allow-Origin', '*'),
+    });
+    let cloned = this.appendToken(cors, jwt);
     return next.handle(cloned).pipe(
       catchError((error) => {
         if (error instanceof HttpErrorResponse && error.status === 401) {
@@ -36,6 +41,7 @@ export class JwtHttpInterceptor implements HttpInterceptor {
 
   private appendToken(request: HttpRequest<any>, token: string | null) {
     if (token) {
+      console.log('[HttpInterceptor] Appending JWT');
       const cloned = request.clone({
         headers: request.headers.set('Authorization', 'Bearer ' + token),
       });

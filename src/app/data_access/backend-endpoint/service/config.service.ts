@@ -19,29 +19,36 @@ import { config } from './dummyData';
   providedIn: 'root',
 })
 export class ConfigService extends BehaviorSubject<AppEvent[]> {
-  private static readonly configUrl: string = `${environment.apiUrl}/events`;
+  private static readonly configUrl: string = `${environment.apiUrl}/event`;
   constructor(
     private readonly http: HttpClient,
     private readonly eventQueue: EventQueueService,
     private readonly jwt: JwtProviderService
   ) {
     super([]);
+    console.log('[ConfigService] Setting up info for BehaviourSubject');
     if (!sessionStorage.getItem('jwt')) {
       jwt.auth();
+      jwt.authProcess.subscribe((worked) => {
+        console.log('[ConfigService] Jwt received');
+        this.requestConfig();
+      });
+    } else {
+      this.requestConfig();
     }
     this.subscribe((events) => {
+      console.log('[ConfigService] Events parsed: ', events);
       //console.log('SUBJECT RECEIVED S', events);
       events.forEach((event) => {
         this.fillEvent(event);
         eventQueue.submitEvent(event);
       });
     });
-    this.requestConfig();
   }
 
   public requestConfig() {
     //console.log('requesting config from', config.events);
-    let events = config;
+    /*let events = config;
     of(events.events)
       .pipe(
         map((response: any): AppEvent[] =>
@@ -51,21 +58,21 @@ export class ConfigService extends BehaviorSubject<AppEvent[]> {
           }))
         )
       )
-      .subscribe(this);
+      .subscribe(this);*/
 
     //  !!! Actual request down below !!!
-
-    /*this.http
+    console.log('[ConfigService] Requesting config');
+    this.http
       .get(ConfigService.configUrl)
       .pipe(
         map((response: any): AppEvent[] =>
-          (response.events as EventDto[]).map<AppEvent>((eventDto) => ({
+          (response as EventDto[]).map<AppEvent>((eventDto) => ({
             finish: false,
             ...eventDto,
           }))
         )
       )
-      .subscribe(this);*/
+      .subscribe(this);
   }
 
   private fillEvent(event: AppEvent) {
