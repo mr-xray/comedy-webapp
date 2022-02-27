@@ -9,7 +9,10 @@ import {
 } from 'src/app/data_access/trigger-registration/triggers';
 import { EventIdentifier } from 'src/app/data_access/websocket/util/events';
 import { AppEvent } from 'src/app/data_access/websocket/util/types';
-import { GpsTriggerPayload } from '../../../data_access/trigger-registration/trigger-type-controller';
+import {
+  GpsTriggerPayload,
+  ManualTriggerPayload,
+} from '../../../data_access/trigger-registration/trigger-type-controller';
 import { Queue } from '../util/queue';
 import { UpdatingPrioritySet } from '../util/updating-priority-set';
 
@@ -92,7 +95,10 @@ export class EventQueueService extends Subject<AppEvent> {
         console.log('[EventQueueService] Checking id to match ', trigger);
         for (let tr of manuals) {
           if (tr.id === trigger.id) {
-            console.log('[EventQueueService] Match found, activating trigger ');
+            console.log(
+              '[EventQueueService] Match found, activating trigger with duration ' +
+                (tr.payload as ManualTriggerPayload).minDuration
+            );
             this.doUpdateCheck(tr);
           }
         }
@@ -116,26 +122,20 @@ export class EventQueueService extends Subject<AppEvent> {
       let endTime = this.updatingPrioritySet.activeTriggerDuration ?? 0;
       //console.log(this.updatingPrioritySet.storage.length);
       // If active trigger is not over yet, wait until it is
-      if (new Date().valueOf() < endTime) {
-        //console.log('Not ready yet');
-        await new Promise((resolve) => {
-          setTimeout(resolve, endTime - new Date().valueOf());
-        });
-      }
+      console.log(
+        '[EventQueueService] Setting timeout for ms , ',
+        endTime - new Date().valueOf()
+      );
 
       // If you get here, the next trigger needs to be triggered
       // If the loop of this method call was interrupted, delete the loop and return
       // It can do this because if it was interrupted, there is already another call of reInitiateSetLoop
       // The executing instance of reInitiateSetLoop is always that which was triggered by the currently executing trigger
       // The currently executing trigger is the trigger with the highest priority of those, who have been triggered
-      if (this.interruptingMap.get(poppingLoop)) {
-        //console.log('I was interrupted');
-        this.interruptingMap.delete(poppingLoop);
-        return;
-      }
 
       //Pop off the set
       let triggered = this.updatingPrioritySet.pop();
+      console.log('[EventQueueService] Popping...');
       //console.log(this.updatingPrioritySet.storage);
       if (triggered) {
         let event = this.events.get(triggered.eventId) ?? { finish: false };
@@ -147,7 +147,20 @@ export class EventQueueService extends Subject<AppEvent> {
           this.next(this.events.get(triggered.eventId));
         }
       }
+      if (new Date().valueOf() < endTime) {
+        //console.log('Not ready yet');
+        await new Promise((resolve) => {
+          setTimeout(resolve, endTime - new Date().valueOf());
+        });
+        console.log('[EventQueueService] Timeout succesfully awaited');
+      }
+      if (this.interruptingMap.get(poppingLoop)) {
+        console.log('[EventQueueService] Loop was interrupted');
+        this.interruptingMap.delete(poppingLoop);
+        return;
+      }
     }
+    console.log('[EventQueueService] Queue worked off');
     this.interruptingMap.delete(poppingLoop);
   }
 

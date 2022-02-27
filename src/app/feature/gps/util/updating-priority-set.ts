@@ -54,6 +54,12 @@ export class UpdatingPrioritySet {
     // If event
     if (this.top()?.id === val.id) {
       this._activeTriggerDuration = undefined;
+      if (val.type === TriggerType.MANUAL) {
+        this._activeTriggerDuration = {
+          startDate: new Date(),
+          duration: (val.payload as ManualTriggerPayload).minDuration,
+        };
+      }
       return true;
     }
     return false;
@@ -77,7 +83,7 @@ export class UpdatingPrioritySet {
 
   public pop(): TriggerEventBinding | undefined {
     let triggerd: TriggerEventBinding | undefined;
-    if (this._activeTriggerDuration !== undefined) {
+    /*if (this._activeTriggerDuration !== undefined) {
       if (
         this.activeTriggerDuration &&
         this.activeTriggerDuration <= new Date().valueOf()
@@ -88,10 +94,15 @@ export class UpdatingPrioritySet {
           duration: (triggerd?.payload as ManualTriggerPayload).minDuration,
         };
       } else {
-        throw new Error('Active Event time has no yet ended');
+        throw new Error('Active Event time has not yet ended');
       }
-    }
-    return this._store.pop();
+    }*/
+    triggerd = this._store.pop();
+    this._activeTriggerDuration = {
+      startDate: new Date(),
+      duration: (triggerd?.payload as ManualTriggerPayload).minDuration,
+    };
+    return triggerd;
   }
 
   public top(): TriggerEventBinding | undefined {
