@@ -1,7 +1,7 @@
 <div id="question-summary">
   <h1>Multiple-Choice Fragen Antworten</h1>
   <div *ngFor="let question of questions">
-    Frage: {{ question.question }}
+    Frage: {{ question.question }}<br />
     Antworten:
     <div *ngFor="let answer of question.answers | keyvalue">
       <p>{{ answer.key }}: {{ answer.value }}</p>

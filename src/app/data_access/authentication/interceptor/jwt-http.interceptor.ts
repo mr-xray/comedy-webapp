@@ -19,7 +19,7 @@ export class JwtHttpInterceptor implements HttpInterceptor {
     null
   );
   public constructor(private readonly jwtProvider: JwtProviderService) {}
-  intercept(
+  /*intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
@@ -61,6 +61,7 @@ export class JwtHttpInterceptor implements HttpInterceptor {
       this.isRefreshing = true;
       console.log('[HttpInterceptor] Set refreshing state for future requests');
       console.log('[HttpInterceptor] Issuing token renewal');
+      
       this.jwtProvider.renewToken().subscribe((newToken) => {
         let newJwt = (newToken as JwtResultDto).accessToken;
         console.log('[HttpInterceptor] New token arrived');
@@ -99,5 +100,56 @@ export class JwtHttpInterceptor implements HttpInterceptor {
       take(1),
       switchMap((token) => next.handle(this.appendToken(request, token)))
     );
+  }*/
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<Object>> {
+    let authReq = req;
+    const token = sessionStorage.getItem('jwt');
+    if (token != null) {
+      authReq = this.addTokenHeader(req, token);
+    }
+    return next.handle(authReq).pipe(
+      catchError((error) => {
+        if (error instanceof HttpErrorResponse && error.status === 401) {
+          return this.handle401Error(authReq, next);
+        }
+        return throwError(error);
+      })
+    );
+  }
+  private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
+    if (!this.isRefreshing) {
+      this.isRefreshing = true;
+      this.refreshTokenSubject.next(null);
+      const token = sessionStorage.getItem('refresh');
+      if (token)
+        return this.jwtProvider.renewToken().pipe(
+          switchMap((token: any) => {
+            this.isRefreshing = false;
+            this.refreshTokenSubject.next(token.accessToken);
+
+            return next.handle(this.addTokenHeader(request, token.accessToken));
+          }),
+          catchError((err) => {
+            this.isRefreshing = false;
+            return throwError(err);
+          })
+        );
+    }
+    return this.refreshTokenSubject.pipe(
+      filter((token) => token !== null),
+      take(1),
+      switchMap((token) => next.handle(this.addTokenHeader(request, token)))
+    );
+  }
+  private addTokenHeader(request: HttpRequest<any>, token: string) {
+    /* for Spring Boot back-end */
+    // return request.clone({ headers: request.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token) });
+    /* for Node.js Express back-end */
+    return request.clone({
+      headers: request.headers.set('Authorization', 'Bearer ' + token),
+    });
   }
 }

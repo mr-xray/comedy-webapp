@@ -54,15 +54,14 @@ export class AdminMapComponent implements OnInit {
   ngOnInit() {
     this.createMap();
     this.mapView.setCenter(ol.proj.fromLonLat([15.539918, 46.800877]));
-
-    this.eventQueue.unobscureGpsTriggers.forEach((t) =>
+    this.eventQueue.gpsSubmission.subscribe((t) => {
       this.createMarkerForGps(
         (t.payload as GpsTriggerPayload).coordinates.longitude,
         (t.payload as GpsTriggerPayload).coordinates.latitude,
         this.createLayer((t.payload as GpsTriggerPayload).markerIcon),
         ++this.featureId
-      )
-    );
+      );
+    });
     let layer = this.createLayer(environment.customerIconPath);
     this.websocket.userLocations.subscribe((location) => {
       console.log(

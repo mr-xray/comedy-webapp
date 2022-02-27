@@ -25,10 +25,12 @@ export class QuestionService extends Subject<QuestionResultDto[]> {
   }
 
   public handInQuestion(newQuestion: QuestionResultDto) {
+    console.log('[QuestionService] Question handed in');
     let question: QuestionResultDto | undefined = this.questionStats.find(
       (question) => question.id === newQuestion.id
     );
     if (question) {
+      console.log('[QuestionService] Question found already');
       this.addAnswersToResults(newQuestion, question);
     } else {
       let addedQuestion = {
@@ -52,10 +54,11 @@ export class QuestionService extends Subject<QuestionResultDto[]> {
     question: QuestionResultDto
   ) {
     for (let answer of Object.entries(newQuestion.answers)) {
-      if (question.answers[answer[0]]) {
-        question.answers[answer[0]] += 1;
+      console.log('[QuestionService] Adding answer: ', answer);
+      if (question.answers[answer[1] as string]) {
+        question.answers[answer[1] as string] += 1;
       } else {
-        question.answers[answer[0]] = 1;
+        question.answers[answer[1] as string] = 1;
       }
     }
   }
