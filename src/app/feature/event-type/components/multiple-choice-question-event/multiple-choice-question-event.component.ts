@@ -23,6 +23,7 @@ export class MultipleChoiceQuestionEventComponent implements OnInit {
   @Input()
   set payload(pl: MultipleChoiceQuestionEventPayload) {
     this._payload = pl;
+    this.questionNumeration = [];
     this.question = this._payload.question;
     let answerCode = 64;
     for (let answer of this._payload.answers) {

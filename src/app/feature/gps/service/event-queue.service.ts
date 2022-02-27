@@ -119,13 +119,8 @@ export class EventQueueService extends Subject<AppEvent> {
     }
     this.interruptingMap.set(poppingLoop, false);
     while (this.updatingPrioritySet.storage.length !== 0) {
-      let endTime = this.updatingPrioritySet.activeTriggerDuration ?? 0;
       //console.log(this.updatingPrioritySet.storage.length);
       // If active trigger is not over yet, wait until it is
-      console.log(
-        '[EventQueueService] Setting timeout for ms , ',
-        endTime - new Date().valueOf()
-      );
 
       // If you get here, the next trigger needs to be triggered
       // If the loop of this method call was interrupted, delete the loop and return
@@ -134,7 +129,8 @@ export class EventQueueService extends Subject<AppEvent> {
       // The currently executing trigger is the trigger with the highest priority of those, who have been triggered
 
       //Pop off the set
-      let triggered = this.updatingPrioritySet.pop();
+      let triggered = this.updatingPrioritySet.top();
+      let endTime = this.updatingPrioritySet.activeTriggerDuration ?? 0;
       console.log('[EventQueueService] Popping...');
       //console.log(this.updatingPrioritySet.storage);
       if (triggered) {
@@ -147,6 +143,10 @@ export class EventQueueService extends Subject<AppEvent> {
           this.next(this.events.get(triggered.eventId));
         }
       }
+      console.log(
+        '[EventQueueService] Setting timeout for ms , ',
+        endTime - new Date().valueOf()
+      );
       if (new Date().valueOf() < endTime) {
         //console.log('Not ready yet');
         await new Promise((resolve) => {
@@ -154,6 +154,7 @@ export class EventQueueService extends Subject<AppEvent> {
         });
         console.log('[EventQueueService] Timeout succesfully awaited');
       }
+      this.updatingPrioritySet.pop();
       if (this.interruptingMap.get(poppingLoop)) {
         console.log('[EventQueueService] Loop was interrupted');
         this.interruptingMap.delete(poppingLoop);
@@ -166,6 +167,7 @@ export class EventQueueService extends Subject<AppEvent> {
 
   private doUpdateCheck(trigger: TriggerEventBinding) {
     let top = this.updatingPrioritySet.push(trigger);
+    console.log('[EventQueueService] New is top');
     if (top) {
       this.reInitiateSetTriggerLoop();
     }

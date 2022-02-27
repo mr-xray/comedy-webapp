@@ -49,6 +49,12 @@ export class UpdatingPrioritySet {
       // If event is new and trigger has a valid priority,
       // insert it at its spot the smaller end of the (sorted)"updating priority set" via Binary Search
       let index: number = this.findMaxBinaryIndex(val);
+      console.log(
+        '[UpdatingPrioritySet] Inserting at index ',
+        index,
+        ' of ',
+        this._store.length
+      );
       this._store.splice(index, 0, val);
     }
     // If event
