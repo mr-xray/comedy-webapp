@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageEventComponent } from './components/image-event/image-event.component';
 import { VideoEventComponent } from './components/video-event/video-event.component';
@@ -18,5 +18,6 @@ import { WebsocketModule } from 'src/app/data_access/websocket/websocket.module'
   ],
   imports: [CommonModule, IFrameXssBypassModule, WebsocketModule],
   exports: [EventContainerComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class EventTypeModule {}

@@ -11,7 +11,20 @@ export class AugmentedRealityEventComponent implements OnInit {
     url: '',
     width: 0,
     height: 0,
-    length: 0,
+    coordinates: {
+      latitude: 0,
+      longitude: 0,
+    },
+    scale: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    rotation: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
   };
   constructor() {}
 

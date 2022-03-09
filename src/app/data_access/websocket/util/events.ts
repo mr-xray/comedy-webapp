@@ -32,7 +32,21 @@ export interface MultipleChoiceQuestionEventPayload {
 
 export interface AugmentedRealityEventPayload {
   url: string;
-  width: number;
-  height: number;
-  length: number;
+  text?: string;
+  height?: number;
+  width?: number;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+  rotation?: {
+    x: number;
+    y: number;
+    z: number;
+  };
+  scale?: {
+    x: number;
+    y: number;
+    z: number;
+  };
 }
