@@ -36,6 +36,8 @@ export class MapComponent implements OnInit {
     });
   }
 
+  inc: number = 0;
+
   private map: any;
   private mapView: any;
   private markerMap: Map<string, any> = new Map();
@@ -158,7 +160,7 @@ export class MapComponent implements OnInit {
     layer.getSource().removeFeature(feature);
   }
 
-  @HostListener('window:deviceorientation', ['$event', 'true'])
+  @HostListener('window:deviceorientationabsolute', ['$event', 'true'])
   rotateMap(event: DeviceOrientationEvent) {
     if (event.alpha && event.absolute) {
       this.mapView.setRotation(event.alpha * (Math.PI / 180));
