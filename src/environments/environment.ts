@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://jakob-galaxy.at:3000',
+  apiUrl: 'https://ufokatze.ddns.net:3000',
   customerIconPath:
     'https://cdn.discordapp.com/attachments/545999117214810142/946819673662570557/persona.png',
   selfPositionIconPath:

@@ -3,6 +3,7 @@ import { GeolocationService } from '@ng-web-apis/geolocation';
 import { Socket, SocketIoConfig } from 'ngx-socket-io';
 import { ReplaySubject, Subject } from 'rxjs';
 import { EventQueueService } from 'src/app/feature/gps/service/event-queue.service';
+import { environment } from 'src/environments/environment';
 import { JwtProviderService } from '../../authentication/service/jwt-provider.service';
 import { ConfigService } from '../../backend-endpoint/service/config.service';
 import { QuestionService } from '../../backend-endpoint/service/question.service';
@@ -16,7 +17,7 @@ import { EventDto } from '../util/types';
 })
 export class WebsocketService {
   public static readonly SOCKET_CONFIG: SocketIoConfig = {
-    url: 'https://jakob-galaxy.at:3000',
+    url: environment.apiUrl,
     options: {},
   };
   public userLocations: Subject<{
