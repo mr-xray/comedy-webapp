@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { GeolocationService } from '@ng-web-apis/geolocation';
 import { EventIdentifier } from 'src/app/data_access/websocket/util/events';
 import {
@@ -156,5 +156,12 @@ export class MapComponent implements OnInit {
     let feature = layer.getSource().getFeatureById(id);
     //console.log(feature);
     layer.getSource().removeFeature(feature);
+  }
+
+  @HostListener('window:deviceorientation', ['$event', 'true'])
+  rotateMap(event: DeviceOrientationEvent) {
+    if (event.alpha && event.absolute) {
+      this.mapView.setRotation(event.alpha * (Math.PI / 180));
+    }
   }
 }
